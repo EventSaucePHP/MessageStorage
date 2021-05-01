@@ -4,7 +4,7 @@ namespace EventSauce\MessageOutbox\TestTooling;
 
 use EventSauce\EventSourcing\DefaultHeadersDecorator;
 use EventSauce\EventSourcing\Message;
-use EventSauce\MessageOutbox\DummyEvent;
+use EventSauce\MessageOutbox\OutboxMessageRepository;
 use PHPUnit\Framework\TestCase;
 
 use function iterator_to_array;

@@ -1,0 +1,7 @@
+parameters:
+    level: max
+    paths:
+        - src
+    excludes_analyse:
+        - *Test.php
+    checkMissingIterableValueType: false

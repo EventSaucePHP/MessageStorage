@@ -39,7 +39,15 @@ class InMemoryOutboxMessageRepository implements OutboxMessageRepository
     public function markConsumed(Message ...$messages): void
     {
         foreach ($messages as $message) {
-            unset($this->messages[((int) $message->header(self::MESSAGE_ID_HEADER))]);
+            unset($this->messages[$this->idFromMessage($message)]);
         }
+    }
+
+    private function idFromMessage(Message $message): int
+    {
+        /** @var int|string $id */
+        $id = $message->header(self::MESSAGE_ID_HEADER);
+
+        return (int) $id;
     }
 }

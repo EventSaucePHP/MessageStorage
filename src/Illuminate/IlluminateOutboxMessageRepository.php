@@ -52,12 +52,20 @@ class IlluminateOutboxMessageRepository implements OutboxMessageRepository
     public function markConsumed(Message ...$messages): void
     {
         $ids = array_map(
-            fn(Message $message) => (int) $message->header(self::ILLUMINATE_OUTBOX_MESSAGE_ID),
+            fn(Message $message) => $this->idFromMessage($message),
             $messages,
         );
 
         $this->connection->table($this->tableName)
             ->whereIn('id', $ids)
             ->update(['consumed' => true]);
+    }
+
+    private function idFromMessage(Message $message): int
+    {
+        /** @var int|string $id */
+        $id = $message->header(self::ILLUMINATE_OUTBOX_MESSAGE_ID);
+
+        return (int) $id;
     }
 }
