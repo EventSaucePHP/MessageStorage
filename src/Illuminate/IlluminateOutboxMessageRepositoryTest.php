@@ -1,9 +1,10 @@
 <?php
 
-namespace EventSauce\MessageOutbox\Illuminate;
+namespace EventSauce\MessageOutbox\IlluminateMessageOutbox;
 
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageOutbox\OutboxMessageRepository;
+use EventSauce\MessageOutbox\TestTooling\OutboxMessageRepositoryTestCase;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\ConnectionInterface;
 

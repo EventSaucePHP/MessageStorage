@@ -1,6 +1,6 @@
 <?php
 
-namespace EventSauce\MessageOutbox\Illuminate;
+namespace EventSauce\MessageOutbox\IlluminateMessageOutbox;
 
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\Serialization\MessageSerializer;
