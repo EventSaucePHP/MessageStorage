@@ -8,7 +8,8 @@
     },
     "require": {
         "eventsauce/eventsauce": "dev-version/1.0.0",
-        "eventsauce/backoff": "dev-main"
+        "eventsauce/message-outbox": "dev-main",
+        "phpunit/phpunit": "^9.5"
     },
     "license": "MIT",
     "authors": [
