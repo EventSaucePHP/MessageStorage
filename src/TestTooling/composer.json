@@ -1,6 +1,6 @@
 {
     "name": "eventsauce/message-outbox-test-tooling",
-    "description": "EventSauce Outbox Pattern Test Tooling",
+    "description": "Message Outbox test tooling",
     "autoload": {
         "psr-4": {
             "EventSauce\\MessageOutbox\\TestTooling\\": "./"
