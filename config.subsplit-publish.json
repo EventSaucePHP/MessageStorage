@@ -1,0 +1,19 @@
+{
+    "sub-splits": [
+        {
+            "name": "core",
+            "directory": "src/MessageOutbox",
+            "target": "git@github.com:EventSaucePHP/MessageOutbox.git"
+        },
+        {
+            "name": "illuminate",
+            "directory": "src/Illuminate",
+            "target": "git@github.com:EventSaucePHP/MessageOutboxForIlluminate.git"
+        },
+        {
+            "name": "testing",
+            "directory": "src/TestTooling",
+            "target": "git@github.com:EventSaucePHP/MessageOutboxTestTooling.git"
+        }
+    ]
+}
