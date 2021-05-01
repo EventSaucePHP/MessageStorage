@@ -2,9 +2,11 @@
 
 namespace EventSauce\MessageOutbox;
 
+use EventSauce\BackOff\NoWaitingBackOffStrategy;
 use EventSauce\EventSourcing\DefaultHeadersDecorator;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageConsumer;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 
 use function iterator_to_array;
@@ -48,6 +50,7 @@ class OutboxMessageRelayTest extends TestCase
      */
     public function messages_can_be_committed_in_batches(): void
     {
+        // Arrange
         $repository = new class() extends InMemoryOutboxMessageRepository {
             public int $commitCount = 0;
             public function markConsumed(Message ...$messages): void
@@ -78,6 +81,41 @@ class OutboxMessageRelayTest extends TestCase
         self::assertEquals(4, $consumer->messageCount);
         self::assertEquals(2, $repository->commitCount);
         self::assertCount(0, $messages);
+    }
+
+    /**
+     * @test
+     */
+    public function relaying_messages_is_tolerant_to_consumer_failures(): void
+    {
+        // Arrange
+        $repository = new InMemoryOutboxMessageRepository();
+        $consumer = new class() implements MessageConsumer {
+            public int $callCount = 0;
+            public int $handledCount = 0;
+            public function handle(Message $message): void
+            {
+                $this->callCount++;
+
+                if ($this->callCount === 1) {
+                    throw new LogicException('Oh no');
+                }
+
+                $this->handledCount++;
+            }
+        };
+        $relay = new OutboxMessageRelay($repository, $consumer, new NoWaitingBackOffStrategy(25));
+        $message1 = $this->createMessage('one');
+        $message2 = $this->createMessage('two');
+        $message3 = $this->createMessage('three');
+        $repository->persist($message1, $message2, $message3);
+
+        // Act
+        $relay->publishBatch(100);
+
+        // Assert
+        self::assertEquals(3, $consumer->handledCount);
+        self::assertEquals(4, $consumer->callCount);
     }
 
     private function createMessage(string $value): Message

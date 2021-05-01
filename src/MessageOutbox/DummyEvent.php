@@ -4,6 +4,9 @@ namespace EventSauce\MessageOutbox;
 
 use EventSauce\EventSourcing\Serialization\SerializablePayload;
 
+/**
+ * @codeCoverageIgnore
+ */
 class DummyEvent implements SerializablePayload
 {
     public function __construct(public string $value = 'example')

@@ -4,6 +4,9 @@ use EventSauce\BackOff\LinearBackOffStrategy;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Schema\Blueprint;
 
+/**
+ * @codeCoverageIgnore
+ */
 include __DIR__ . '/../vendor/autoload.php';
 
 $manager = new Manager;
