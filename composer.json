@@ -12,7 +12,7 @@
     "require": {
         "eventsauce/eventsauce": "dev-version/1.0.0",
         "eventsauce/backoff": "dev-main",
-        "doctrine/dbal": "^3.0"
+        "doctrine/dbal": "^3.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
