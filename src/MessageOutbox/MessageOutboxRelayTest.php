@@ -6,7 +6,6 @@ use EventSauce\BackOff\NoWaitingBackOffStrategy;
 use EventSauce\EventSourcing\DefaultHeadersDecorator;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageConsumer;
-use Exception;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 
@@ -24,6 +23,7 @@ class MessageOutboxRelayTest extends TestCase
         $consumer = new class() implements MessageConsumer {
             /** @var list<Message> */
             public array $messages = [];
+
             public function handle(Message $message): void
             {
                 $this->messages[] = $message;
@@ -54,6 +54,7 @@ class MessageOutboxRelayTest extends TestCase
         // Arrange
         $repository = new class() extends InMemoryMessageOutboxRepository {
             public int $commitCount = 0;
+
             public function markConsumed(Message ...$messages): void
             {
                 $this->commitCount++;
@@ -62,6 +63,7 @@ class MessageOutboxRelayTest extends TestCase
         };
         $consumer = new class() implements MessageConsumer {
             public int $messageCount = 0;
+
             public function handle(Message $message): void
             {
                 $this->messageCount++;
@@ -93,7 +95,9 @@ class MessageOutboxRelayTest extends TestCase
         $repository = new InMemoryMessageOutboxRepository();
         $consumer = new class() implements MessageConsumer {
             public int $callCount = 0;
+
             public int $handledCount = 0;
+
             public function handle(Message $message): void
             {
                 $this->callCount++;
@@ -131,16 +135,14 @@ class MessageOutboxRelayTest extends TestCase
         $repository = new InMemoryMessageOutboxRepository();
         $consumer = new class() implements MessageConsumer {
             public int $callCount = 0;
+
             public function handle(Message $message): void
             {
                 $this->callCount++;
             }
         };
         $relay = new MessageOutboxRelay(
-            $repository,
-            $consumer,
-            new NoWaitingBackOffStrategy(25),
-            new DeleteMessageOnCommit(),
+            $repository, $consumer, new NoWaitingBackOffStrategy(25), new DeleteMessageOnCommit(),
         );
         $message1 = $this->createMessage('one');
         $message2 = $this->createMessage('two');
