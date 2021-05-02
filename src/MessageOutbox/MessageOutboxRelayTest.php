@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 use function iterator_to_array;
 
-class OutboxMessageRelayTest extends TestCase
+class MessageOutboxRelayTest extends TestCase
 {
     /**
      * @test
@@ -19,7 +19,7 @@ class OutboxMessageRelayTest extends TestCase
     public function message_from_the_outbox_can_be_relayed(): void
     {
         // Arrange
-        $repository = new InMemoryOutboxMessageRepository();
+        $repository = new InMemoryMessageOutboxRepository();
         $consumer = new class() implements MessageConsumer {
             /** @var list<Message> */
             public array $messages = [];
@@ -28,7 +28,7 @@ class OutboxMessageRelayTest extends TestCase
                 $this->messages[] = $message;
             }
         };
-        $relay = new OutboxMessageRelay($repository, $consumer);
+        $relay = new MessageOutboxRelay($repository, $consumer);
         $message1 = $this->createMessage('one');
         $message2 = $this->createMessage('two');
         $message3 = $this->createMessage('three');
@@ -51,7 +51,7 @@ class OutboxMessageRelayTest extends TestCase
     public function messages_can_be_committed_in_batches(): void
     {
         // Arrange
-        $repository = new class() extends InMemoryOutboxMessageRepository {
+        $repository = new class() extends InMemoryMessageOutboxRepository {
             public int $commitCount = 0;
             public function markConsumed(Message ...$messages): void
             {
@@ -66,7 +66,7 @@ class OutboxMessageRelayTest extends TestCase
                 $this->messageCount++;
             }
         };
-        $relay = new OutboxMessageRelay($repository, $consumer);
+        $relay = new MessageOutboxRelay($repository, $consumer);
         $message1 = $this->createMessage('one');
         $message2 = $this->createMessage('two');
         $message3 = $this->createMessage('three');
@@ -89,7 +89,7 @@ class OutboxMessageRelayTest extends TestCase
     public function relaying_messages_is_tolerant_to_consumer_failures(): void
     {
         // Arrange
-        $repository = new InMemoryOutboxMessageRepository();
+        $repository = new InMemoryMessageOutboxRepository();
         $consumer = new class() implements MessageConsumer {
             public int $callCount = 0;
             public int $handledCount = 0;
@@ -104,7 +104,7 @@ class OutboxMessageRelayTest extends TestCase
                 $this->handledCount++;
             }
         };
-        $relay = new OutboxMessageRelay($repository, $consumer, new NoWaitingBackOffStrategy(25));
+        $relay = new MessageOutboxRelay($repository, $consumer, new NoWaitingBackOffStrategy(25));
         $message1 = $this->createMessage('one');
         $message2 = $this->createMessage('two');
         $message3 = $this->createMessage('three');

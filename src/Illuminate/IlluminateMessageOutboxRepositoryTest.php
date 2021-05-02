@@ -3,12 +3,11 @@
 namespace EventSauce\MessageOutbox\IlluminateMessageOutbox;
 
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
-use EventSauce\MessageOutbox\OutboxMessageRepository;
 use EventSauce\MessageOutbox\TestTooling\OutboxMessageRepositoryTestCase;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\ConnectionInterface;
 
-class IlluminateOutboxMessageRepositoryTest extends OutboxMessageRepositoryTestCase
+class IlluminateMessageOutboxRepositoryTest extends OutboxMessageRepositoryTestCase
 {
     private ConnectionInterface $connection;
 
@@ -34,12 +33,10 @@ class IlluminateOutboxMessageRepositoryTest extends OutboxMessageRepositoryTestC
         $this->connection->table('outbox_messages')->truncate();
     }
 
-    protected function outboxMessageRepository(): OutboxMessageRepository
+    protected function outboxMessageRepository(): IlluminateMessageOutboxRepository
     {
-        return new IlluminateOutboxMessageRepository(
-            $this->connection,
-            'outbox_messages',
-            new ConstructingMessageSerializer(),
+        return new IlluminateMessageOutboxRepository(
+            $this->connection, 'outbox_messages', new ConstructingMessageSerializer(),
         );
     }
 }

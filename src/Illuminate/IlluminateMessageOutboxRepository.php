@@ -4,7 +4,7 @@ namespace EventSauce\MessageOutbox\IlluminateMessageOutbox;
 
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\Serialization\MessageSerializer;
-use EventSauce\MessageOutbox\OutboxMessageRepository;
+use EventSauce\MessageOutbox\MessageOutboxRepository;
 use Illuminate\Database\ConnectionInterface;
 use Traversable;
 
@@ -12,7 +12,7 @@ use function array_map;
 use function json_decode;
 use function json_encode;
 
-class IlluminateOutboxMessageRepository implements OutboxMessageRepository
+class IlluminateMessageOutboxRepository implements MessageOutboxRepository
 {
     const ILLUMINATE_OUTBOX_MESSAGE_ID = '__illuminate_outbox.message_id';
 
@@ -61,11 +61,51 @@ class IlluminateOutboxMessageRepository implements OutboxMessageRepository
             ->update(['consumed' => true]);
     }
 
+    public function numberOfConsumedMessages(): int
+    {
+        return $this->connection->table($this->tableName)
+            ->where('consumed', true)
+            ->count('id');
+    }
+
+    public function numberOfPendingMessages(): int
+    {
+        return $this->connection->table($this->tableName)
+            ->where('consumed', false)
+            ->count('id');
+    }
+
+    public function numberOfMessages(): int
+    {
+        return $this->connection->table($this->tableName)->count('id');
+    }
+
+    public function cleanupConsumedMessages(int $amount): int
+    {
+        return $this->connection->table($this->tableName)
+            ->where('consumed', true)
+            ->orderBy('id', 'asc')
+            ->limit($amount)
+            ->delete();
+    }
+
     private function idFromMessage(Message $message): int
     {
         /** @var int|string $id */
         $id = $message->header(self::ILLUMINATE_OUTBOX_MESSAGE_ID);
 
         return (int) $id;
+    }
+
+    public function deleteConsumed(Message ...$messages): void
+    {
+        $ids = array_map(
+            fn(Message $message) => $this->idFromMessage($message),
+            $messages,
+        );
+
+        $this->connection->table($this->tableName)
+            ->whereIn('id', $ids)
+            ->delete();
     }
 }

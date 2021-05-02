@@ -7,8 +7,8 @@
         }
     },
     "require": {
-        "eventsauce/eventsauce": "dev-version/1.0.0",
-        "eventsauce/backoff": "dev-main"
+        "eventsauce/eventsauce": "^1.0",
+        "eventsauce/backoff": "^1.0"
     },
     "license": "MIT",
     "authors": [

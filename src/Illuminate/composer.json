@@ -7,9 +7,9 @@
         }
     },
     "require": {
-        "eventsauce/eventsauce": "dev-version/1.0.0",
-        "eventsauce/backoff": "dev-main",
-        "eventsauce/message-outbox": "dev-main"
+        "eventsauce/eventsauce": "^1.0",
+        "eventsauce/message-outbox": "^1.0",
+        "illuminate/database": "^8.35"
     },
     "license": "MIT",
     "authors": [

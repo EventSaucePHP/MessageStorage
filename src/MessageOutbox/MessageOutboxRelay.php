@@ -10,12 +10,12 @@ use Throwable;
 
 use function count;
 
-class OutboxMessageRelay
+class MessageOutboxRelay
 {
     private BackOffStrategy $backOff;
 
     public function __construct(
-        private OutboxMessageRepository $repository,
+        private MessageOutboxRepository $repository,
         private MessageConsumer $consumer,
         BackOffStrategy $backOff = null
     ) {

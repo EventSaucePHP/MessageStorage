@@ -4,7 +4,7 @@ namespace EventSauce\MessageOutbox\TestTooling;
 
 use EventSauce\EventSourcing\DefaultHeadersDecorator;
 use EventSauce\EventSourcing\Message;
-use EventSauce\MessageOutbox\OutboxMessageRepository;
+use EventSauce\MessageOutbox\MessageOutboxRepository;
 use PHPUnit\Framework\TestCase;
 
 use function iterator_to_array;
@@ -57,12 +57,69 @@ abstract class OutboxMessageRepositoryTestCase extends TestCase
         $this->assertEquals($message3->event(), $messages[0]->event());
     }
 
-    private function createMessage(string $value): Message
+    /**
+     * @test
+     */
+    public function it_exposes_counts_of_messages(): void
+    {
+        // Arrange
+        $repository = $this->outboxMessageRepository();
+        $messages = [];
+
+        for ($i = 1; $i <= 10; $i++) {
+            $messages[] = $this->createMessage("Message {$i}");
+        }
+
+        $repository->persist(...$messages);
+        $messages = iterator_to_array($repository->retrieveBatch(7));
+        $repository->markConsumed(...$messages);
+
+        // Act
+        $numberOfConsumedMessages = $repository->numberOfConsumedMessages();
+        $numberOfPendingMessages = $repository->numberOfPendingMessages();
+        $numberOfMessages = $repository->numberOfMessages();
+
+        // Assert
+        self::assertEquals(7, $numberOfConsumedMessages);
+        self::assertEquals(3, $numberOfPendingMessages);
+        self::assertEquals(10, $numberOfMessages);
+    }
+
+    /**
+     * @test
+     */
+    public function cleaning_up_consumed_messages(): void
+    {
+        // Arrange
+        $repository = $this->outboxMessageRepository();
+        $messages = [];
+
+        for ($i = 1; $i <= 10; $i++) {
+            $messages[] = $this->createMessage("Message {$i}");
+        }
+
+        $repository->persist(...$messages);
+        $messages = iterator_to_array($repository->retrieveBatch(7));
+        $repository->markConsumed(...$messages);
+        $repository->cleanupConsumedMessages(5);
+
+        // Act
+        $numberOfConsumedMessages = $repository->numberOfConsumedMessages();
+        $numberOfPendingMessages = $repository->numberOfPendingMessages();
+        $numberOfMessages = $repository->numberOfMessages();
+
+        // Assert
+        self::assertEquals(2, $numberOfConsumedMessages);
+        self::assertEquals(3, $numberOfPendingMessages);
+        self::assertEquals(5, $numberOfMessages);
+    }
+
+    protected function createMessage(string $value): Message
     {
         $message = new Message(new DummyEvent($value));
 
         return (new DefaultHeadersDecorator())->decorate($message);
     }
 
-    abstract protected function outboxMessageRepository(): OutboxMessageRepository;
+    abstract protected function outboxMessageRepository(): MessageOutboxRepository;
 }

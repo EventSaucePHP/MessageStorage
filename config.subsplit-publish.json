@@ -11,6 +11,11 @@
             "target": "git@github.com:EventSaucePHP/MessageOutboxForIlluminate.git"
         },
         {
+            "name": "doctrine",
+            "directory": "src/Doctrine",
+            "target": "git@github.com:EventSaucePHP/MessageOutboxForDoctrine.git"
+        },
+        {
             "name": "testing",
             "directory": "src/TestTooling",
             "target": "git@github.com:EventSaucePHP/MessageOutboxTestTooling.git"

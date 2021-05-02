@@ -1,15 +1,15 @@
 {
-    "name": "eventsauce/message-outbox-test-tooling",
-    "description": "Message Outbox test tooling",
+    "name": "eventsauce/message-outbox-for-doctrine",
+    "description": "Message Outbox Pattern implementation for Doctrine 3",
     "autoload": {
         "psr-4": {
-            "EventSauce\\MessageOutbox\\TestTooling\\": "./"
+            "EventSauce\\MessageOutbox\\Illuminate\\": "./"
         }
     },
     "require": {
         "eventsauce/eventsauce": "^1.0",
         "eventsauce/message-outbox": "^1.0",
-        "phpunit/phpunit": "^9.5"
+        "illuminate/database": "^8.35"
     },
     "license": "MIT",
     "authors": [
