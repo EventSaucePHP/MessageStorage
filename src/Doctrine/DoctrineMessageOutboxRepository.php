@@ -47,7 +47,6 @@ class DoctrineMessageOutboxRepository implements MessageOutboxRepository
         $statement->bindValue(1, $batchSize, ParameterType::INTEGER);
         $result = $statement->executeQuery();
 
-        /** @var array{id: string, payload: string} $row */
         while($row = $result->fetchAssociative()) {
             $message = $this->serializer->unserializePayload(json_decode($row['payload'], true));
 
