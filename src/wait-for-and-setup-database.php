@@ -42,11 +42,13 @@ while(true) {
 }
 
 $connection->getSchemaBuilder()->dropIfExists('outbox_messages');
-$connection->getSchemaBuilder()->create(
-    'outbox_messages',
-    function (Blueprint $table) {
-        $table->bigIncrements('id');
-        $table->string('payload', 16001);
-        $table->boolean('consumed')->default(false);
-    }
+$connection->statement(<<<SQL
+CREATE TABLE IF NOT EXISTS `outbox_messages` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `consumed` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `payload` varchar(16001) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `is_consumed` (`consumed`, `id` ASC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+SQL
 );
