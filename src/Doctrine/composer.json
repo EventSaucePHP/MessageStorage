@@ -7,9 +7,9 @@
         }
     },
     "require": {
+        "doctrine/dbal": "^3.0",
         "eventsauce/eventsauce": "^1.0",
-        "eventsauce/message-outbox": "^1.0",
-        "illuminate/database": "^8.35"
+        "eventsauce/message-outbox": "^1.0"
     },
     "license": "MIT",
     "authors": [
