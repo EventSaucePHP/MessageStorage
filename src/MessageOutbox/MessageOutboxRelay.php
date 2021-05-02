@@ -13,13 +13,16 @@ use function count;
 class MessageOutboxRelay
 {
     private BackOffStrategy $backOff;
+    private RelayCommitStrategy $commitStrategy;
 
     public function __construct(
         private MessageOutboxRepository $repository,
         private MessageConsumer $consumer,
-        BackOffStrategy $backOff = null
+        BackOffStrategy $backOff = null,
+        RelayCommitStrategy $commitStrategy = null
     ) {
         $this->backOff = $backOff ?: new ExponentialBackOffStrategy(100000, 25);
+        $this->commitStrategy = $commitStrategy ?: new MarkMessagesConsumedOnCommit();
     }
 
     public function publishBatch(int $batchSize, int $commitSize = 1): int
@@ -39,7 +42,7 @@ class MessageOutboxRelay
                 $publishedMessages[] = $message;
 
                 if (($numberPublished + 1) % $commitSize === 0) {
-                    $this->repository->markConsumed(...$publishedMessages);
+                    $this->commitMessages($publishedMessages);
                     $publishedMessages = [];
                 }
             } catch (Throwable $throwable) {
@@ -50,9 +53,17 @@ class MessageOutboxRelay
         }
 
         if (count($publishedMessages) > 0) {
-            $this->repository->markConsumed(...$publishedMessages);
+            $this->commitMessages($publishedMessages);
         }
 
         return $numberPublished;
+    }
+
+    /**
+     * @param Message[] $messages
+     */
+    private function commitMessages(array $messages): void
+    {
+        $this->commitStrategy->commitMessages($this->repository, ...$messages);
     }
 }

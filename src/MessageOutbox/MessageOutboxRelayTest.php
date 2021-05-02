@@ -6,6 +6,7 @@ use EventSauce\BackOff\NoWaitingBackOffStrategy;
 use EventSauce\EventSourcing\DefaultHeadersDecorator;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageConsumer;
+use Exception;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 
@@ -116,6 +117,44 @@ class MessageOutboxRelayTest extends TestCase
         // Assert
         self::assertEquals(3, $consumer->handledCount);
         self::assertEquals(4, $consumer->callCount);
+        self::assertEquals(3, $repository->numberOfMessages());
+        self::assertEquals(3, $repository->numberOfConsumedMessages());
+        self::assertEquals(0, $repository->numberOfPendingMessages());
+    }
+
+    /**
+     * @test
+     */
+    public function using_a_delete_based_commit_strategy(): void
+    {
+        // Arrange
+        $repository = new InMemoryMessageOutboxRepository();
+        $consumer = new class() implements MessageConsumer {
+            public int $callCount = 0;
+            public function handle(Message $message): void
+            {
+                $this->callCount++;
+            }
+        };
+        $relay = new MessageOutboxRelay(
+            $repository,
+            $consumer,
+            new NoWaitingBackOffStrategy(25),
+            new DeleteMessageOnCommit(),
+        );
+        $message1 = $this->createMessage('one');
+        $message2 = $this->createMessage('two');
+        $message3 = $this->createMessage('three');
+        $repository->persist($message1, $message2, $message3);
+
+        // Act
+        $relay->publishBatch(100);
+
+        // Assert
+        self::assertEquals(3, $consumer->callCount);
+        self::assertEquals(0, $repository->numberOfMessages());
+        self::assertEquals(0, $repository->numberOfConsumedMessages());
+        self::assertEquals(0, $repository->numberOfPendingMessages());
     }
 
     private function createMessage(string $value): Message
