@@ -114,6 +114,80 @@ abstract class OutboxMessageRepositoryTestCase extends TestCase
         self::assertEquals(5, $numberOfMessages);
     }
 
+    /**
+     * @test
+     */
+    public function persisting_no_messages(): void
+    {
+        // Arrange
+        $repository = $this->outboxMessageRepository();
+
+        // Act
+        $repository->persist();
+
+        // Assert
+        self::assertEquals(0, $repository->numberOfMessages());
+    }
+
+    /**
+     * @test
+     */
+    public function marking_no_messages_as_consumed(): void
+    {
+        // Arrange
+        $repository = $this->outboxMessageRepository();
+        $repository->persist($this->createMessage('one'));
+
+        // Act
+        $repository->markConsumed();
+
+        self::assertEquals(1, $repository->numberOfMessages());
+        self::assertEquals(1, $repository->numberOfPendingMessages());
+        self::assertEquals(0, $repository->numberOfConsumedMessages());
+    }
+
+
+
+    /**
+     * @test
+     */
+    public function deleting_no_messages(): void
+    {
+        // Arrange
+        $repository = $this->outboxMessageRepository();
+        $repository->persist($this->createMessage('one'));
+
+        // Act
+        $repository->deleteMessages();
+
+        self::assertEquals(1, $repository->numberOfMessages());
+        self::assertEquals(1, $repository->numberOfPendingMessages());
+        self::assertEquals(0, $repository->numberOfConsumedMessages());
+    }
+
+    /**
+     * @test
+     */
+    public function deleting_messages_from_the_outbox(): void
+    {
+        // Arrange
+        $repository = $this->outboxMessageRepository();
+        $repository->persist(
+            $this->createMessage('one'),
+            $this->createMessage('two'),
+            $this->createMessage('three'),
+            $this->createMessage('four'),
+        );
+
+        // Act
+        $messages = iterator_to_array($repository->retrieveBatch(2));
+        $repository->deleteMessages(...$messages);
+
+        self::assertEquals(2, $repository->numberOfMessages());
+        self::assertEquals(2, $repository->numberOfPendingMessages());
+        self::assertEquals(0, $repository->numberOfConsumedMessages());
+    }
+
     protected function createMessage(string $value): Message
     {
         $message = new Message(new DummyEvent($value));

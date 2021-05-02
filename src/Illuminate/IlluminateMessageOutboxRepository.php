@@ -9,12 +9,13 @@ use Illuminate\Database\ConnectionInterface;
 use Traversable;
 
 use function array_map;
+use function count;
 use function json_decode;
 use function json_encode;
 
 class IlluminateMessageOutboxRepository implements MessageOutboxRepository
 {
-    const ILLUMINATE_OUTBOX_MESSAGE_ID = '__illuminate_outbox.message_id';
+    public const ILLUMINATE_OUTBOX_MESSAGE_ID = '__illuminate_outbox.message_id';
 
     public function __construct(
         private ConnectionInterface $connection,
@@ -25,6 +26,10 @@ class IlluminateMessageOutboxRepository implements MessageOutboxRepository
 
     public function persist(Message ...$messages): void
     {
+        if (count($messages) === 0) {
+            return;
+        }
+
         $inserts = array_map(function (Message $message) {
             return ['payload' => json_encode($this->serializer->serializeMessage($message))];
         }, $messages);
@@ -51,6 +56,10 @@ class IlluminateMessageOutboxRepository implements MessageOutboxRepository
 
     public function markConsumed(Message ...$messages): void
     {
+        if (count($messages) === 0) {
+            return;
+        }
+
         $ids = array_map(
             fn(Message $message) => $this->idFromMessage($message),
             $messages,
@@ -97,8 +106,12 @@ class IlluminateMessageOutboxRepository implements MessageOutboxRepository
         return (int) $id;
     }
 
-    public function deleteConsumed(Message ...$messages): void
+    public function deleteMessages(Message ...$messages): void
     {
+        if (count($messages) === 0) {
+            return;
+        }
+
         $ids = array_map(
             fn(Message $message) => $this->idFromMessage($message),
             $messages,

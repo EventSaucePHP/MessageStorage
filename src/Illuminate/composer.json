@@ -3,7 +3,7 @@
     "description": "Message Outbox Pattern implementation for Illuminate",
     "autoload": {
         "psr-4": {
-            "EventSauce\\MessageOutbox\\Illuminate\\": "./"
+            "EventSauce\\MessageOutbox\\IlluminateMessageOutbox\\": "./"
         }
     },
     "require": {

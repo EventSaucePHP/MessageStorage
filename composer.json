@@ -5,7 +5,8 @@
         "psr-4": {
             "EventSauce\\MessageOutbox\\TestTooling\\": "src/TestTooling",
             "EventSauce\\MessageOutbox\\": "src/MessageOutbox",
-            "EventSauce\\MessageOutbox\\IlluminateMessageOutbox\\": "src/Illuminate"
+            "EventSauce\\MessageOutbox\\IlluminateMessageOutbox\\": "src/Illuminate",
+            "EventSauce\\MessageOutbox\\DoctrineMessageOutbox\\": "src/Doctrine"
         }
     },
     "require": {

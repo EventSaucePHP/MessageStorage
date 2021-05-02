@@ -54,7 +54,7 @@ class InMemoryMessageOutboxRepository implements MessageOutboxRepository
         return (int) $id;
     }
 
-    public function deleteConsumed(Message ...$messages): void
+    public function deleteMessages(Message ...$messages): void
     {
         foreach ($messages as $message) {
             unset($this->messages[$this->idFromMessage($message)]);

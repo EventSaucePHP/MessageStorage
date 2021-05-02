@@ -13,7 +13,7 @@ interface MessageOutboxRepository
 
     public function markConsumed(Message ...$messages): void;
 
-    public function deleteConsumed(Message ...$messages): void;
+    public function deleteMessages(Message ...$messages): void;
 
     public function cleanupConsumedMessages(int $amount): int;
 
