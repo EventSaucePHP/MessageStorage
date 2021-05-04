@@ -5,8 +5,10 @@
         "psr-4": {
             "EventSauce\\MessageOutbox\\TestTooling\\": "src/TestTooling",
             "EventSauce\\MessageOutbox\\": "src/MessageOutbox",
-            "EventSauce\\MessageOutbox\\IlluminateMessageOutbox\\": "src/Illuminate",
-            "EventSauce\\MessageOutbox\\DoctrineMessageOutbox\\": "src/Doctrine"
+            "EventSauce\\MessageOutbox\\IlluminateMessageOutbox\\": "src/IlluminateMessageOutbox",
+            "EventSauce\\MessageOutbox\\DoctrineMessageOutbox\\": "src/DoctrineMessageOutbox",
+            "EventSauce\\IlluminateMessageRepository\\": "src/IlluminateMessageRepository",
+            "EventSauce\\DoctrineMessageRepository\\": "src/DoctrineMessageRepository"
         }
     },
     "require": {
@@ -17,7 +19,8 @@
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "illuminate/database": "^8.35",
-        "phpstan/phpstan": "^0.12.85"
+        "phpstan/phpstan": "^0.12.85",
+        "ramsey/uuid": "^4.1"
     },
     "license": "MIT",
     "authors": [

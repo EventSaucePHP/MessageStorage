@@ -30,9 +30,12 @@ class IlluminateMessageOutboxRepository implements MessageOutboxRepository
             return;
         }
 
-        $inserts = array_map(function (Message $message) {
-            return ['payload' => json_encode($this->serializer->serializeMessage($message))];
-        }, $messages);
+        $inserts = array_map(
+            function (Message $message) {
+                return ['payload' => json_encode($this->serializer->serializeMessage($message))];
+            },
+            $messages
+        );
 
         $this->connection->table($this->tableName)->insert($inserts);
     }
@@ -65,23 +68,17 @@ class IlluminateMessageOutboxRepository implements MessageOutboxRepository
             $messages,
         );
 
-        $this->connection->table($this->tableName)
-            ->whereIn('id', $ids)
-            ->update(['consumed' => true]);
+        $this->connection->table($this->tableName)->whereIn('id', $ids)->update(['consumed' => true]);
     }
 
     public function numberOfConsumedMessages(): int
     {
-        return $this->connection->table($this->tableName)
-            ->where('consumed', true)
-            ->count('id');
+        return $this->connection->table($this->tableName)->where('consumed', true)->count('id');
     }
 
     public function numberOfPendingMessages(): int
     {
-        return $this->connection->table($this->tableName)
-            ->where('consumed', false)
-            ->count('id');
+        return $this->connection->table($this->tableName)->where('consumed', false)->count('id');
     }
 
     public function numberOfMessages(): int
@@ -91,11 +88,9 @@ class IlluminateMessageOutboxRepository implements MessageOutboxRepository
 
     public function cleanupConsumedMessages(int $amount): int
     {
-        return $this->connection->table($this->tableName)
-            ->where('consumed', true)
-            ->orderBy('id', 'asc')
-            ->limit($amount)
-            ->delete();
+        return $this->connection->table($this->tableName)->where('consumed', true)->orderBy('id', 'asc')->limit(
+                $amount
+            )->delete();
     }
 
     private function idFromMessage(Message $message): int
@@ -117,8 +112,6 @@ class IlluminateMessageOutboxRepository implements MessageOutboxRepository
             $messages,
         );
 
-        $this->connection->table($this->tableName)
-            ->whereIn('id', $ids)
-            ->delete();
+        $this->connection->table($this->tableName)->whereIn('id', $ids)->delete();
     }
 }

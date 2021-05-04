@@ -2,7 +2,6 @@
 
 use EventSauce\BackOff\LinearBackOffStrategy;
 use Illuminate\Database\Capsule\Manager;
-use Illuminate\Database\Schema\Blueprint;
 
 /**
  * @codeCoverageIgnore
@@ -49,6 +48,20 @@ CREATE TABLE IF NOT EXISTS `outbox_messages` (
   `payload` varchar(16001) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `is_consumed` (`consumed`, `id` ASC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+SQL
+);
+
+$connection->getSchemaBuilder()->dropIfExists('domain_messages_uuid');
+$connection->statement(<<<SQL
+CREATE TABLE IF NOT EXISTS `domain_messages_uuid` (
+  `event_id` BINARY(16) NOT NULL,
+  `aggregate_root_id` BINARY(16) NOT NULL,
+  `version` int(20) unsigned NULL,
+  `payload` varchar(16001) NOT NULL,
+  PRIMARY KEY (`event_id`),
+  KEY (`aggregate_root_id`),
+  KEY `reconstitution` (`aggregate_root_id`, `version` ASC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 SQL
 );

@@ -1,0 +1,20 @@
+{
+    "name": "eventsauce/message-repository-for-doctrine",
+    "description": "Message Repository for Doctrine 3",
+    "autoload": {
+        "psr-4": {
+            "EventSauce\\DoctrineMessageRepository\\": "./"
+        }
+    },
+    "require": {
+        "doctrine/dbal": "^3.1",
+        "eventsauce/eventsauce": "^1.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Frank de Jonge",
+            "email": "info@frankdejonge.nl"
+        }
+    ]
+}

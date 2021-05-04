@@ -1,0 +1,20 @@
+{
+    "name": "eventsauce/message-repository-for-doctrine",
+    "description": "Message Repository for Illuminate",
+    "autoload": {
+        "psr-4": {
+            "EventSauce\\IlluminateMessageRepository\\": "./"
+        }
+    },
+    "require": {
+        "eventsauce/eventsauce": "^1.0",
+        "illuminate/database": "^8.35"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Frank de Jonge",
+            "email": "info@frankdejonge.nl"
+        }
+    ]
+}
