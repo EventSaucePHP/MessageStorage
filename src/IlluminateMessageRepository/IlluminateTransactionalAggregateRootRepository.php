@@ -3,15 +3,17 @@
 namespace EventSauce\IlluminateMessageRepository;
 
 use Doctrine\DBAL\Connection;
+use EventSauce\EventSourcing\AggregateRoot;
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\AggregateRootRepository;
 use EventSauce\EventSourcing\UnableToPersistMessages;
 use Throwable;
 
 /**
- * @template            T of AggregateRoot
+ * @template                T of AggregateRoot
  *
- * @template-implements AggregateRootRepository<T>
+ * @template-implements     AggregateRootRepository<T>
+ * @see                     AggregateRoot
  */
 class IlluminateTransactionalAggregateRootRepository implements AggregateRootRepository
 {

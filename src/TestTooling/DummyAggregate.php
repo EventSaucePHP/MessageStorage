@@ -24,7 +24,7 @@ class DummyAggregate implements AggregateRoot
         return $this->lastValue;
     }
 
-    protected function applyDummyEvent(DummyEvent $event)
+    protected function applyDummyEvent(DummyEvent $event): void
     {
         $this->lastValue = $event->value;
     }
