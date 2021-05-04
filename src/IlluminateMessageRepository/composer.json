@@ -1,5 +1,5 @@
 {
-    "name": "eventsauce/message-repository-for-doctrine",
+    "name": "eventsauce/message-repository-for-illuminate",
     "description": "Message Repository for Illuminate",
     "autoload": {
         "psr-4": {
