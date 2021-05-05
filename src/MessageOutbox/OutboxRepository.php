@@ -5,7 +5,7 @@ namespace EventSauce\MessageOutbox;
 use EventSauce\EventSourcing\Message;
 use Traversable;
 
-interface MessageOutboxRepository
+interface OutboxRepository
 {
     public function persist(Message ...$messages): void;
 

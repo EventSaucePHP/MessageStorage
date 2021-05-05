@@ -9,7 +9,7 @@ use Throwable;
 
 class OutboxMessageDispatcher implements MessageDispatcher
 {
-    public function __construct(private MessageOutboxRepository $repository)
+    public function __construct(private OutboxRepository $repository)
     {
     }
 

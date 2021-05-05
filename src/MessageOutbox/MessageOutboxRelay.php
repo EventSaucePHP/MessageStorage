@@ -16,7 +16,7 @@ class MessageOutboxRelay
     private RelayCommitStrategy $commitStrategy;
 
     public function __construct(
-        private MessageOutboxRepository $repository,
+        private OutboxRepository $repository,
         private MessageConsumer $consumer,
         BackOffStrategy $backOff = null,
         RelayCommitStrategy $commitStrategy = null

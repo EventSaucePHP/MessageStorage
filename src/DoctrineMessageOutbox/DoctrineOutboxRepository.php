@@ -6,12 +6,12 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\Serialization\MessageSerializer;
-use EventSauce\MessageOutbox\MessageOutboxRepository;
+use EventSauce\MessageOutbox\OutboxRepository;
 use Traversable;
 
 use function count;
 
-class DoctrineMessageOutboxRepository implements MessageOutboxRepository
+class DoctrineOutboxRepository implements OutboxRepository
 {
     public const DOCTRINE_OUTBOX_MESSAGE_ID = '__doctrine_outbox.message_id';
 

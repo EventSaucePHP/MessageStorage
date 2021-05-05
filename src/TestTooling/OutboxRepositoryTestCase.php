@@ -4,12 +4,12 @@ namespace EventSauce\MessageOutbox\TestTooling;
 
 use EventSauce\EventSourcing\DefaultHeadersDecorator;
 use EventSauce\EventSourcing\Message;
-use EventSauce\MessageOutbox\MessageOutboxRepository;
+use EventSauce\MessageOutbox\OutboxRepository;
 use PHPUnit\Framework\TestCase;
 
 use function iterator_to_array;
 
-abstract class OutboxMessageRepositoryTestCase extends TestCase
+abstract class OutboxRepositoryTestCase extends TestCase
 {
     /**
      * @test
@@ -195,5 +195,5 @@ abstract class OutboxMessageRepositoryTestCase extends TestCase
         return (new DefaultHeadersDecorator())->decorate($message);
     }
 
-    abstract protected function outboxMessageRepository(): MessageOutboxRepository;
+    abstract protected function outboxMessageRepository(): OutboxRepository;
 }

@@ -2,7 +2,7 @@
 
 namespace EventSauce\IlluminateMessageRepository;
 
-use Doctrine\DBAL\DriverManager;
+use EventSauce\DoctrineMessageRepository\DummyAggregateRootId;
 use EventSauce\EventSourcing\DefaultHeadersDecorator;
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
@@ -15,7 +15,6 @@ use Illuminate\Database\ConnectionInterface;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
-use function assert;
 use function iterator_to_array;
 
 class IlluminateUuidV4MessageRepositoryTest extends TestCase
@@ -166,5 +165,19 @@ class IlluminateUuidV4MessageRepositoryTest extends TestCase
         self::expectException(UnableToRetrieveMessages::class);
 
         $repository->retrieveAllAfterVersion(DummyAggregateRootId::generate(), 5);
+    }
+
+    /**
+     * @test
+     */
+    public function interting_no_messages(): void
+    {
+        $aggregateRootId = DummyAggregateRootId::generate();
+        $repository = $this->messageRepository();
+
+        $repository->persist();
+        $messages = iterator_to_array($repository->retrieveAll($aggregateRootId));
+
+        self::assertCount(0, $messages);;
     }
 }

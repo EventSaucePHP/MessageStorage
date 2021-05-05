@@ -19,7 +19,7 @@ class OutboxMessageDispatcherTest extends TestCase
     public function dispatched_messages_end_up_in_the_outbox(): void
     {
         // Arrange
-        $repository = new InMemoryMessageOutboxRepository();
+        $repository = new InMemoryOutboxRepository();
         $dispatcher = new OutboxMessageDispatcher($repository);
         $message1  = $this->createMessage('one');
         $message2  = $this->createMessage('two');
@@ -41,7 +41,7 @@ class OutboxMessageDispatcherTest extends TestCase
     public function when_storing_fails_we_signal_we_are_unable_to_dispatch_the_messages(): void
     {
         // Arrange
-        $repository = new class () extends InMemoryMessageOutboxRepository{
+        $repository = new class () extends InMemoryOutboxRepository{
             public function persist(Message ...$messages): void
             {
                 throw new RuntimeException('Unable to store the messages');

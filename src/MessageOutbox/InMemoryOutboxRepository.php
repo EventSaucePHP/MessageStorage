@@ -9,7 +9,7 @@ use function array_reduce;
 use function array_slice;
 use function count;
 
-class InMemoryMessageOutboxRepository implements MessageOutboxRepository
+class InMemoryOutboxRepository implements OutboxRepository
 {
     const MESSAGE_ID_HEADER = '__in-memory.message-id';
     const IS_CONSUMED_HEADER = '__in-memory.message-is-consumed';

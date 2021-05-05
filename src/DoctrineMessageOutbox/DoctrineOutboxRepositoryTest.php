@@ -5,9 +5,9 @@ namespace EventSauce\MessageOutbox\DoctrineMessageOutbox;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
-use EventSauce\MessageOutbox\TestTooling\OutboxMessageRepositoryTestCase;
+use EventSauce\MessageOutbox\TestTooling\OutboxRepositoryTestCase;
 
-class DoctrineMessageOutboxRepositoryTest extends OutboxMessageRepositoryTestCase
+class DoctrineOutboxRepositoryTest extends OutboxRepositoryTestCase
 {
     private Connection $connection;
 
@@ -27,9 +27,9 @@ class DoctrineMessageOutboxRepositoryTest extends OutboxMessageRepositoryTestCas
         $this->connection->executeQuery('TRUNCATE TABLE `outbox_messages`');
     }
 
-    protected function outboxMessageRepository(): DoctrineMessageOutboxRepository
+    protected function outboxMessageRepository(): DoctrineOutboxRepository
     {
-        return new DoctrineMessageOutboxRepository(
+        return new DoctrineOutboxRepository(
             $this->connection, 'outbox_messages', new ConstructingMessageSerializer(),
         );
     }

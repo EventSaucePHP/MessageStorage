@@ -4,7 +4,7 @@ namespace EventSauce\MessageOutbox\IlluminateMessageOutbox;
 
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\Serialization\MessageSerializer;
-use EventSauce\MessageOutbox\MessageOutboxRepository;
+use EventSauce\MessageOutbox\OutboxRepository;
 use Illuminate\Database\ConnectionInterface;
 use Traversable;
 
@@ -13,7 +13,7 @@ use function count;
 use function json_decode;
 use function json_encode;
 
-class IlluminateMessageOutboxRepository implements MessageOutboxRepository
+class IlluminateOutboxRepository implements OutboxRepository
 {
     public const ILLUMINATE_OUTBOX_MESSAGE_ID = '__illuminate_outbox.message_id';
 

@@ -2,12 +2,12 @@
 
 namespace EventSauce\MessageOutbox;
 
-use EventSauce\MessageOutbox\TestTooling\OutboxMessageRepositoryTestCase;
+use EventSauce\MessageOutbox\TestTooling\OutboxRepositoryTestCase;
 
-class InMemoryMessageOutboxRepositoryTest extends OutboxMessageRepositoryTestCase
+class InMemoryMessageOutboxRepositoryTest extends OutboxRepositoryTestCase
 {
-    protected function outboxMessageRepository(): MessageOutboxRepository
+    protected function outboxMessageRepository(): OutboxRepository
     {
-        return new InMemoryMessageOutboxRepository();
+        return new InMemoryOutboxRepository();
     }
 }

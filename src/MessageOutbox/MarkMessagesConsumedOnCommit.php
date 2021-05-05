@@ -6,7 +6,7 @@ use EventSauce\EventSourcing\Message;
 
 class MarkMessagesConsumedOnCommit implements RelayCommitStrategy
 {
-    public function commitMessages(MessageOutboxRepository $repository, Message ...$messages): void
+    public function commitMessages(OutboxRepository $repository, Message ...$messages): void
     {
         $repository->markConsumed(...$messages);
     }

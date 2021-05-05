@@ -19,7 +19,7 @@ class MessageOutboxRelayTest extends TestCase
     public function message_from_the_outbox_can_be_relayed(): void
     {
         // Arrange
-        $repository = new InMemoryMessageOutboxRepository();
+        $repository = new InMemoryOutboxRepository();
         $consumer = new class() implements MessageConsumer {
             /** @var list<Message> */
             public array $messages = [];
@@ -52,7 +52,7 @@ class MessageOutboxRelayTest extends TestCase
     public function messages_can_be_committed_in_batches(): void
     {
         // Arrange
-        $repository = new class() extends InMemoryMessageOutboxRepository {
+        $repository = new class() extends InMemoryOutboxRepository {
             public int $commitCount = 0;
 
             public function markConsumed(Message ...$messages): void
@@ -92,7 +92,7 @@ class MessageOutboxRelayTest extends TestCase
     public function relaying_messages_is_tolerant_to_consumer_failures(): void
     {
         // Arrange
-        $repository = new InMemoryMessageOutboxRepository();
+        $repository = new InMemoryOutboxRepository();
         $consumer = new class() implements MessageConsumer {
             public int $callCount = 0;
 
@@ -132,7 +132,7 @@ class MessageOutboxRelayTest extends TestCase
     public function using_a_delete_based_commit_strategy(): void
     {
         // Arrange
-        $repository = new InMemoryMessageOutboxRepository();
+        $repository = new InMemoryOutboxRepository();
         $consumer = new class() implements MessageConsumer {
             public int $callCount = 0;
 
