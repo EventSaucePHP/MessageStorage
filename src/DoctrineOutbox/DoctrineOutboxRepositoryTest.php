@@ -1,6 +1,6 @@
 <?php
 
-namespace EventSauce\MessageOutbox\DoctrineMessageOutbox;
+namespace EventSauce\MessageOutbox\DoctrineOutbox;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;

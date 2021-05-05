@@ -1,6 +1,6 @@
 <?php
 
-namespace EventSauce\MessageOutbox\IlluminateMessageOutbox;
+namespace EventSauce\MessageOutbox\IlluminateOutbox;
 
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\Message;

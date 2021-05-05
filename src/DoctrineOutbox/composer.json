@@ -3,7 +3,7 @@
     "description": "Message Outbox Pattern implementation for Doctrine 3",
     "autoload": {
         "psr-4": {
-            "EventSauce\\MessageOutbox\\DoctrineMessageOutbox\\": "./"
+            "EventSauce\\MessageOutbox\\DoctrineOutbox\\": "./"
         }
     },
     "require": {
