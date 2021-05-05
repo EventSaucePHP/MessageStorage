@@ -10,7 +10,7 @@ use Throwable;
 
 use function count;
 
-class MessageOutboxRelay
+class OutboxRelay
 {
     private BackOffStrategy $backOff;
     private RelayCommitStrategy $commitStrategy;
