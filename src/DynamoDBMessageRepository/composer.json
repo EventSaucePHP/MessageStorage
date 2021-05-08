@@ -1,0 +1,20 @@
+{
+    "name": "eventsauce/message-repository-for-dynamodb",
+    "description": "Message Repository for AWS DynamoDB",
+    "autoload": {
+        "psr-4": {
+            "EventSauce\\DynamoDBMessageRepository\\": "./"
+        }
+    },
+    "require": {
+        "aws/aws-sdk-php": "^3.0",
+        "eventsauce/eventsauce": "^1.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Frank de Jonge",
+            "email": "info@frankdejonge.nl"
+        }
+    ]
+}
