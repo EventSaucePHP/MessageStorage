@@ -1,14 +1,14 @@
 {
-    "name": "eventsauce/message-repository-for-illuminate",
-    "description": "Message Repository for Illuminate",
+    "name": "eventsauce/message-repository-test-tooling",
+    "description": "Message Repository Test Tooling",
     "autoload": {
         "psr-4": {
-            "EventSauce\\IlluminateMessageRepository\\": "./"
+            "EventSauce\\MessageRepositoryTestTooling\\": "./"
         }
     },
     "require": {
         "eventsauce/eventsauce": "^1.0",
-        "illuminate/database": "^8.35",
+        "phpunit/phpunit": "^9.5",
         "ramsey/uuid": "^4.1"
     },
     "license": "MIT",

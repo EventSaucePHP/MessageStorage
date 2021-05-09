@@ -7,6 +7,7 @@
         </include>
         <exclude>
             <directory suffix="Test.php">src/</directory>
+            <directory suffix="TestCase.php">src/</directory>
             <file>src/wait-for-and-setup-database.php</file>
         </exclude>
     </coverage>

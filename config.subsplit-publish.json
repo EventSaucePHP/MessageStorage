@@ -26,7 +26,12 @@
             "target": "git@github.com:EventSaucePHP/MessageRepositoryForDoctrine.git"
         },
         {
-            "name": "testing",
+            "name": "repository-testing",
+            "directory": "src/MessageRepositoryTestTooling",
+            "target": "git@github.com:EventSaucePHP/MessageRepositoryTestTooling.git"
+        },
+        {
+            "name": "outbox-testing",
             "directory": "src/TestTooling",
             "target": "git@github.com:EventSaucePHP/MessageOutboxTestTooling.git"
         }
