@@ -8,8 +8,7 @@
     },
     "require": {
         "eventsauce/eventsauce": "^1.0",
-        "phpunit/phpunit": "^9.5",
-        "ramsey/uuid": "^4.1"
+        "phpunit/phpunit": "^9.5"
     },
     "license": "MIT",
     "authors": [
