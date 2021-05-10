@@ -8,6 +8,7 @@
     },
     "require": {
         "aws/aws-sdk-php": "^3.0",
+        "ramsey/uuid": "^4.1",
         "eventsauce/eventsauce": "^1.0"
     },
     "license": "MIT",

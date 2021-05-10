@@ -10,10 +10,14 @@ use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\Serialization\MessageSerializer;
 use EventSauce\EventSourcing\Header;
+use EventSauce\EventSourcing\UnableToPersistMessages;
+use EventSauce\EventSourcing\UnableToRetrieveMessages;
 use Ramsey\Uuid\Uuid;
 use Generator;
 
-class DynamoDbMessageRepository implements MessageRepository
+use Throwable;
+
+class DynamoDBMessageRepository implements MessageRepository
 {
     /**
      * @var DynamoDbClient
@@ -37,7 +41,7 @@ class DynamoDbMessageRepository implements MessageRepository
         $this->tableName = $tableName;
     }
 
-    public function persist(Message ...$messages)
+    public function persist(Message ...$messages): void
     {
         if (count($messages) === 0) {
             return;
@@ -72,7 +76,11 @@ class DynamoDbMessageRepository implements MessageRepository
 
         $batchRequest = ['RequestItems' => [ $this->tableName => $items ]];
 
-        $this->client->batchWriteItem($batchRequest);
+        try {
+            $this->client->batchWriteItem($batchRequest);
+        } catch (Throwable $exception) {
+            throw UnableToPersistMessages::dueTo('', $exception);
+        }
 
     }
 
@@ -88,7 +96,12 @@ class DynamoDbMessageRepository implements MessageRepository
 
         $result = $this->client->getPaginator('Query', $query);
 
-        return $this->yieldMessagesForResult($result);
+        try {
+            $result->valid();
+            return $this->yieldMessagesForResult($result);
+        } catch (Throwable $exception) {
+            throw UnableToRetrieveMessages::dueTo('', $exception);
+        }
     }
 
     public function retrieveEverything(): Generator
@@ -111,7 +124,12 @@ class DynamoDbMessageRepository implements MessageRepository
 
         $result = $this->client->getPaginator('Query', $query);
 
-        return $this->yieldMessagesForResult($result);
+        try {
+            $result->valid();
+            return $this->yieldMessagesForResult($result);
+        } catch (Throwable $exception) {
+            throw UnableToRetrieveMessages::dueTo('', $exception);
+        }
     }
 
     private function yieldMessagesForResult(ResultPaginator $result)
@@ -124,11 +142,11 @@ class DynamoDbMessageRepository implements MessageRepository
 
             $message = $this->serializer->unserializePayload($payloadItem['payload']);
 
-            yield $message->current();
+            yield $message;
         }
 
         return isset($message)
-            ? $message->current()->header(Header::AGGREGATE_ROOT_VERSION) ?: 0
+            ? $message->header(Header::AGGREGATE_ROOT_VERSION) ?: 0
             : 0;
     }
 }

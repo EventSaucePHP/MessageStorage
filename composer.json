@@ -11,13 +11,15 @@
             "EventSauce\\MessageRepository\\IlluminateMessageRepository\\": "src/IlluminateMessageRepository",
             "EventSauce\\MessageRepository\\DoctrineMessageRepository\\": "src/DoctrineMessageRepository",
             "EventSauce\\MessageRepository\\DoctrineV2MessageRepository\\": "src/DoctrineV2MessageRepository",
-            "EventSauce\\MessageRepository\\TestTooling\\": "src/MessageRepositoryTestTooling"
+            "EventSauce\\MessageRepository\\TestTooling\\": "src/MessageRepositoryTestTooling",
+            "EventSauce\\DynamoDBMessageRepository\\": "src/DynamoDBMessageRepository"
         }
     },
     "require": {
         "eventsauce/eventsauce": "^1.0",
         "eventsauce/backoff": "^1.0",
-        "doctrine/dbal": "^3.1"
+        "doctrine/dbal": "^3.1",
+        "aws/aws-sdk-php": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
