@@ -19,20 +19,9 @@ use Throwable;
 
 class DynamoDBMessageRepository implements MessageRepository
 {
-    /**
-     * @var DynamoDbClient
-     */
-    protected $client;
-
-    /**
-     * @var MessageSerializer
-     */
-    protected $serializer;
-
-    /**
-     * @var string
-     */
-    protected $tableName;
+    protected DynamoDbClient $client;
+    protected MessageSerializer $serializer;
+    protected string $tableName;
 
     public function __construct(DynamoDbClient $client, MessageSerializer $serializer, string $tableName)
     {
@@ -50,7 +39,7 @@ class DynamoDBMessageRepository implements MessageRepository
         $items = [];
         $marshaler = new Marshaler();
 
-        foreach ($messages as $index => $message) {
+        foreach ($messages as $message) {
             $payload = $this->serializer->serializeMessage($message);
             $event = $payload['headers'][Header::EVENT_ID] = $payload['headers'][Header::EVENT_ID] ?? Uuid::uuid4()->toString();
             $aggregateRootId = $payload['headers'][Header::AGGREGATE_ROOT_ID] ?? null;
