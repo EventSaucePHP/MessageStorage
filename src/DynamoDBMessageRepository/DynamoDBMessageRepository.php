@@ -104,13 +104,7 @@ class DynamoDBMessageRepository implements MessageRepository
         }
     }
 
-    public function retrieveEverything(): Generator
-    {
-        $result = $this->client->getPaginator('Scan', ['TableName' => $this->tableName]);
-
-        return $this->yieldMessagesForResult($result);
-    }
-
+    /** @psalm-return Generator<Message> */
     public function retrieveAllAfterVersion(AggregateRootId $id, int $aggregateRootVersion): Generator
     {
         $query = [
@@ -132,13 +126,19 @@ class DynamoDBMessageRepository implements MessageRepository
         }
     }
 
-    private function yieldMessagesForResult(ResultPaginator $result)
+    /**
+     * @psalm-return Generator<Message>
+     */
+    private function yieldMessagesForResult(ResultPaginator $result): Generator
     {
         $marshaler = new Marshaler();
         $items = $result->search('Items');
 
         foreach ($items as $item) {
             $payloadItem = $marshaler->unmarshalItem($item);
+            if(!isset($payloadItem['payload'])) {
+              continue;
+            }
 
             $message = $this->serializer->unserializePayload($payloadItem['payload']);
 
