@@ -124,14 +124,13 @@ class DynamoDBMessageRepository implements MessageRepository
         $items = $result->search('Items');
 
         foreach ($items as $item) {
+            /** @var array[] $payloadItem */
             $payloadItem = $marshaler->unmarshalItem($item);
-            if(!isset($payloadItem['payload'])) {
-              continue;
+            if(isset($payloadItem['payload'])) {
+                $message = $this->serializer->unserializePayload($payloadItem['payload']);
+
+                yield $message;
             }
-
-            $message = $this->serializer->unserializePayload($payloadItem['payload']);
-
-            yield $message;
         }
 
         return isset($message)
