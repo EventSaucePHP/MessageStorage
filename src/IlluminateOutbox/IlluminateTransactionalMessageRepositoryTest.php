@@ -5,10 +5,10 @@ namespace EventSauce\MessageOutbox\IlluminateOutbox;
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
-use EventSauce\IlluminateMessageRepository\DummyAggregateRootId;
-use EventSauce\IlluminateMessageRepository\IlluminateUuidV4MessageRepository;
 use EventSauce\MessageOutbox\OutboxRepository;
 use EventSauce\MessageOutbox\TestTooling\TransactionalMessageRepositoryTestCase;
+use EventSauce\MessageRepository\IlluminateMessageRepository\DummyAggregateRootId;
+use EventSauce\MessageRepository\IlluminateMessageRepository\IlluminateUuidV4MessageRepository;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\ConnectionInterface;
 

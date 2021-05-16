@@ -7,9 +7,9 @@
             "EventSauce\\MessageOutbox\\": "src/MessageOutbox",
             "EventSauce\\MessageOutbox\\IlluminateOutbox\\": "src/IlluminateOutbox",
             "EventSauce\\MessageOutbox\\DoctrineOutbox\\": "src/DoctrineOutbox",
-            "EventSauce\\IlluminateMessageRepository\\": "src/IlluminateMessageRepository",
-            "EventSauce\\DoctrineMessageRepository\\": "src/DoctrineMessageRepository",
-            "EventSauce\\MessageRepositoryTestTooling\\": "src/MessageRepositoryTestTooling"
+            "EventSauce\\MessageRepository\\IlluminateMessageRepository\\": "src/IlluminateMessageRepository",
+            "EventSauce\\MessageRepository\\DoctrineMessageRepository\\": "src/DoctrineMessageRepository",
+            "EventSauce\\MessageRepository\\TestTooling\\": "src/MessageRepositoryTestTooling"
         }
     },
     "require": {

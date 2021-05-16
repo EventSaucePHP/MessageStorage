@@ -1,6 +1,6 @@
 <?php
 
-namespace EventSauce\DoctrineMessageRepository;
+namespace EventSauce\MessageRepository\DoctrineMessageRepository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
@@ -12,15 +12,10 @@ use EventSauce\EventSourcing\Serialization\MessageSerializer;
 use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\EventSourcing\UnableToRetrieveMessages;
 use Generator;
-
 use Ramsey\Uuid\Uuid;
-
 use Throwable;
 
 use function count;
-use function hex2bin;
-use function str_replace;
-use function var_dump;
 
 class DoctrineUuidV4MessageRepository implements MessageRepository
 {

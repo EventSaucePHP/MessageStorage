@@ -1,19 +1,12 @@
 <?php
 
-namespace EventSauce\DoctrineMessageRepository;
+namespace EventSauce\MessageRepository\DoctrineMessageRepository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use EventSauce\EventSourcing\AggregateRootId;
-use EventSauce\EventSourcing\DefaultHeadersDecorator;
-use EventSauce\EventSourcing\Header;
-use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
-use EventSauce\EventSourcing\UnableToPersistMessages;
-use EventSauce\EventSourcing\UnableToRetrieveMessages;
-use EventSauce\MessageOutbox\TestTooling\DummyEvent;
-use EventSauce\MessageRepositoryTestTooling\MessageRepositoryTestCase;
-use PHPUnit\Framework\TestCase;
+use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Ramsey\Uuid\Uuid;
 
 class DoctrineUuidV4MessageRepositoryTest extends MessageRepositoryTestCase

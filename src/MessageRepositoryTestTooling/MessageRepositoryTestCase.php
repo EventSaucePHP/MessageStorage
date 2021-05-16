@@ -1,6 +1,6 @@
 <?php
 
-namespace EventSauce\MessageRepositoryTestTooling;
+namespace EventSauce\MessageRepository\TestTooling;
 
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\DefaultHeadersDecorator;

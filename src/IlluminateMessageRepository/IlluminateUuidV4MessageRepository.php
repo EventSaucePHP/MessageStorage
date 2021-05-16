@@ -1,6 +1,6 @@
 <?php
 
-namespace EventSauce\IlluminateMessageRepository;
+namespace EventSauce\MessageRepository\IlluminateMessageRepository;
 
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\Header;

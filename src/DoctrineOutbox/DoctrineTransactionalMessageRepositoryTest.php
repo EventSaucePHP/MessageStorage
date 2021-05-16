@@ -4,13 +4,13 @@ namespace EventSauce\MessageOutbox\DoctrineOutbox;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
-use EventSauce\DoctrineMessageRepository\DoctrineUuidV4MessageRepository;
-use EventSauce\DoctrineMessageRepository\DummyAggregateRootId;
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageOutbox\OutboxRepository;
 use EventSauce\MessageOutbox\TestTooling\TransactionalMessageRepositoryTestCase;
+use EventSauce\MessageRepository\DoctrineMessageRepository\DoctrineUuidV4MessageRepository;
+use EventSauce\MessageRepository\DoctrineMessageRepository\DummyAggregateRootId;
 
 class DoctrineTransactionalMessageRepositoryTest extends TransactionalMessageRepositoryTestCase
 {

@@ -3,7 +3,7 @@
     "description": "Message Repository Test Tooling",
     "autoload": {
         "psr-4": {
-            "EventSauce\\MessageRepositoryTestTooling\\": "./"
+            "EventSauce\\MessageRepository\\TestTooling\\": "./"
         }
     },
     "require": {
