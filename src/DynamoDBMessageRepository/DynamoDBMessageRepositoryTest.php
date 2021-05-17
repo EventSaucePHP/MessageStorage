@@ -3,10 +3,9 @@
 namespace EventSauce\DynamoDBMessageRepository;
 
 use Aws\DynamoDb\DynamoDbClient;
-use EventSauce\DoctrineMessageRepository\DummyAggregateRootId;
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
-use EventSauce\MessageRepositoryTestTooling\MessageRepositoryTestCase;
+use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Ramsey\Uuid\Uuid;
 
 class DynamoDBMessageRepositoryTest extends MessageRepositoryTestCase
