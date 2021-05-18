@@ -3,7 +3,7 @@
     "description": "Message Repository for Illuminate",
     "autoload": {
         "psr-4": {
-            "EventSauce\\IlluminateMessageRepository\\": "./"
+            "EventSauce\\MessageRepository\\IlluminateMessageRepository\\": "./"
         }
     },
     "require": {
