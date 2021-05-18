@@ -1,6 +1,6 @@
 <?php
 
-namespace EventSauce\DynamoDBMessageRepository;
+namespace EventSauce\MessageRepository\DynamoDBMessageRepository;
 
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;

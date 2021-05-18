@@ -1,6 +1,6 @@
 <?php
 
-namespace EventSauce\DynamoDBMessageRepository;
+namespace EventSauce\MessageRepository\DynamoDBMessageRepository;
 
 use EventSauce\EventSourcing\AggregateRootId;
 use Ramsey\Uuid\Uuid;
