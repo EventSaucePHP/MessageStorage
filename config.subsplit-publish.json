@@ -1,4 +1,8 @@
 {
+    "dependencies-must-satisfy": {
+        "eventsauce/eventsauce": "1.0.0",
+        "eventsauce/message-outbox": "0.1.0"
+    },
     "sub-splits": [
         {
             "name": "core",
