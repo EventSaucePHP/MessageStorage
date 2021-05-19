@@ -1,2 +1,2 @@
 **/*Test.php export-ignore
-**/Dummy*.php
+**/Dummy*.php export-ignore
