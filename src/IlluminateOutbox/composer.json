@@ -8,7 +8,7 @@
     },
     "require": {
         "eventsauce/eventsauce": "^1.0",
-        "eventsauce/message-outbox": "^1.0",
+        "eventsauce/message-outbox": "^0.1.0",
         "illuminate/database": "^8.35"
     },
     "license": "MIT",
