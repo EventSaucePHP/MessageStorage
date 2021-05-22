@@ -1,6 +1,6 @@
 {
     "name": "eventsauce/message-repository-for-doctrine",
-    "description": "Message Repository for Doctrine 3",
+    "description": "Message Repository for Doctrine DBAL 3",
     "autoload": {
         "psr-4": {
             "EventSauce\\MessageRepository\\DoctrineMessageRepository\\": "./"
