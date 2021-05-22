@@ -1,6 +1,6 @@
 <?php
 
-namespace EventSauce\MessageRepository\DoctrineMessageRepository;
+namespace EventSauce\MessageRepository\DoctrineV2MessageRepository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
@@ -10,16 +10,20 @@ use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Ramsey\Uuid\Uuid;
 
-use function class_exists;
+use function interface_exists;
 
+/**
+ * @group doctrine2
+ */
 class DoctrineUuidV4MessageRepositoryTest extends MessageRepositoryTestCase
 {
     private Connection $connection;
 
     protected function setUp(): void
     {
-        if (class_exists(ResultStatement::class)) {
-            $this->markTestSkipped('Doctrine v2 installed');
+        if ( ! interface_exists(ResultStatement::class)) {
+            die("WHAT");
+            $this->markTestSkipped('No doctrine v2 installed');
         }
 
         parent::setUp();

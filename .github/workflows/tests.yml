@@ -44,9 +44,6 @@ jobs:
       - name: Install dependencies
         run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
-#      - name: Run PHP CS Fixer
-#        run: vendor/bin/php-cs-fixer fix -v --dry-run --using-cache=no
-
       - name: Run PHPStan
         run: vendor/bin/phpstan analyze -c phpstan.neon
 
@@ -54,4 +51,10 @@ jobs:
         run: php src/wait-for-and-setup-database.php
 
       - name: Execute tests
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit --exclude-group=doctrine2
+
+      - name: Install doctrine2
+        run: composer require doctrine/dbal:^2.6 --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyze -c phpstan.doctrine2.neon

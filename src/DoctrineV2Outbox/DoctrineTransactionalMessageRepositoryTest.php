@@ -1,6 +1,6 @@
 <?php
 
-namespace EventSauce\MessageOutbox\DoctrineOutbox;
+namespace EventSauce\MessageOutbox\DoctrineV2Outbox;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
@@ -10,19 +10,22 @@ use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageOutbox\OutboxRepository;
 use EventSauce\MessageOutbox\TestTooling\TransactionalMessageRepositoryTestCase;
-use EventSauce\MessageRepository\DoctrineMessageRepository\DoctrineUuidV4MessageRepository;
-use EventSauce\MessageRepository\DoctrineMessageRepository\DummyAggregateRootId;
+use EventSauce\MessageRepository\DoctrineV2MessageRepository\DoctrineUuidV4MessageRepository;
+use EventSauce\MessageRepository\DoctrineV2MessageRepository\DummyAggregateRootId;
 
 use function interface_exists;
 
+/**
+ * @group doctrine2
+ */
 class DoctrineTransactionalMessageRepositoryTest extends TransactionalMessageRepositoryTestCase
 {
     private Connection $connection;
 
     protected function setUp(): void
     {
-        if (interface_exists(ResultStatement::class)) {
-            $this->markTestSkipped('Doctrine v2 installed');
+        if ( ! interface_exists(ResultStatement::class)) {
+            $this->markTestSkipped('No doctrine v2 installed');
         }
 
         parent::setUp();

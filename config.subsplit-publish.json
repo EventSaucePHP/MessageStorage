@@ -20,6 +20,11 @@
             "target": "git@github.com:EventSaucePHP/MessageOutboxForDoctrine.git"
         },
         {
+            "name": "doctrine-v2-outbox",
+            "directory": "src/DoctrineV2Outbox",
+            "target": "git@github.com:EventSaucePHP/MessageOutboxForDoctrineV2.git"
+        },
+        {
             "name": "illuminate-repository",
             "directory": "src/IlluminateMessageRepository",
             "target": "git@github.com:EventSaucePHP/MessageRepositoryForIlluminate.git"
@@ -28,6 +33,11 @@
             "name": "doctrine-repository",
             "directory": "src/DoctrineMessageRepository",
             "target": "git@github.com:EventSaucePHP/MessageRepositoryForDoctrine.git"
+        },
+        {
+            "name": "doctrine-v2-repository",
+            "directory": "src/DoctrineV2MessageRepository",
+            "target": "git@github.com:EventSaucePHP/MessageRepositoryForDoctrineV2.git"
         },
         {
             "name": "repository-testing",

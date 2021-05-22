@@ -1,0 +1,21 @@
+{
+    "name": "eventsauce/message-outbox-for-doctrine-v2",
+    "description": "Message Outbox Pattern implementation for Doctrine 3",
+    "autoload": {
+        "psr-4": {
+            "EventSauce\\MessageOutbox\\DoctrineV2Outbox\\": "./"
+        }
+    },
+    "require": {
+        "doctrine/dbal": "^3.1",
+        "eventsauce/eventsauce": "^1.0",
+        "eventsauce/message-outbox": "^0.1.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Frank de Jonge",
+            "email": "info@frankdejonge.nl"
+        }
+    ]
+}

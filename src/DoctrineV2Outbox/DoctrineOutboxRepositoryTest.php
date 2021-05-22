@@ -1,6 +1,6 @@
 <?php
 
-namespace EventSauce\MessageOutbox\DoctrineOutbox;
+namespace EventSauce\MessageOutbox\DoctrineV2Outbox;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
@@ -10,14 +10,17 @@ use EventSauce\MessageOutbox\TestTooling\OutboxRepositoryTestCase;
 
 use function interface_exists;
 
+/**
+ * @group doctrine2
+ */
 class DoctrineOutboxRepositoryTest extends OutboxRepositoryTestCase
 {
     private Connection $connection;
 
     protected function setUp(): void
     {
-        if (interface_exists(ResultStatement::class)) {
-            $this->markTestSkipped('Doctrine v2 installed');
+        if ( ! interface_exists(ResultStatement::class)) {
+            $this->markTestSkipped('No doctrine v2 installed');
         }
 
         parent::setUp();
