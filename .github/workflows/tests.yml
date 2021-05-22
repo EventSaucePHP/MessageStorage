@@ -56,5 +56,8 @@ jobs:
       - name: Install doctrine2
         run: composer require doctrine/dbal:^2.6 --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
+      - name: Execute doctrine2 tests
+        run: vendor/bin/phpunit --group=doctrine2
+
       - name: Run PHPStan
         run: vendor/bin/phpstan analyze -c phpstan.doctrine2.neon
