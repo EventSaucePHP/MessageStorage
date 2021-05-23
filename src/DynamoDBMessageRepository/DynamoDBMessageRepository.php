@@ -66,6 +66,7 @@ class DynamoDBMessageRepository implements MessageRepository
         $batchRequest = ['RequestItems' => [ $this->tableName => $items ]];
 
         try {
+            /** @phpstan-ignore-next-line */
             $this->client->batchWriteItem($batchRequest);
         } catch (Throwable $exception) {
             throw UnableToPersistMessages::dueTo('', $exception);
