@@ -74,9 +74,9 @@ class DynamoDBMessageRepository implements MessageRepository
         $query = [
             'TableName' => $this->tableName,
             'ConsistentRead' => true,
-            'KeyConditionExpression' => 'aggregateRootId = :v1',
+            'KeyConditionExpression' => 'aggregateRootId = :aggregateRootId',
             'ExpressionAttributeValues' => [
-                ':v1' => ['S' => $id->toString()],
+                ':aggregateRootId' => ['S' => $id->toString()],
             ]
         ];
 
@@ -94,14 +94,13 @@ class DynamoDBMessageRepository implements MessageRepository
         $query = [
             'TableName' => $this->tableName,
             'ConsistentRead' => true,
-            'KeyConditionExpression' => 'aggregateRootId = :v1 AND aggregateRootVersion > :v2',
+            'KeyConditionExpression'
+                => 'aggregateRootId = :aggregateRootId AND aggregateRootVersion > :aggregateRootVersion',
             'ExpressionAttributeValues' => [
-                ':v1' => ['S' => $id->toString()],
-                ':v2' => ['N' => $aggregateRootVersion]
+                ':aggregateRootId' => ['S' => $id->toString()],
+                ':aggregateRootVersion' => ['N' => $aggregateRootVersion]
             ]
         ];
-
-
 
         try {
             $this->client->query($query)->info();
