@@ -2,9 +2,8 @@
 
 namespace EventSauce\MessageRepository\DynamoDBMessageRepository;
 
-use Aws\DynamoDb\DynamoDbClient;
-use Aws\DynamoDb\Marshaler;
-use Aws\ResultPaginator;
+use AsyncAws\DynamoDb\DynamoDbClient;
+use AsyncAws\DynamoDb\ValueObject\AttributeValue;
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageRepository;
@@ -14,7 +13,6 @@ use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\EventSourcing\UnableToRetrieveMessages;
 use Ramsey\Uuid\Uuid;
 use Generator;
-
 use Throwable;
 
 class DynamoDBMessageRepository implements MessageRepository
@@ -37,8 +35,6 @@ class DynamoDBMessageRepository implements MessageRepository
         }
 
         $items = [];
-        $marshaler = new Marshaler();
-
         foreach ($messages as $message) {
             $payload = $this->serializer->serializeMessage($message);
             $event = $payload['headers'][Header::EVENT_ID] = $payload['headers'][Header::EVENT_ID] ?? Uuid::uuid4()->toString();
@@ -48,12 +44,12 @@ class DynamoDBMessageRepository implements MessageRepository
             $timeOfRecording = $payload['headers'][Header::TIME_OF_RECORDING];
 
             $item = [
-                'event' => $marshaler->marshalValue($event),
-                'aggregateRootId' => $marshaler->marshalValue($aggregateRootId),
-                'eventType' => $marshaler->marshalValue($eventType),
-                'aggregateRootVersion' => $marshaler->marshalValue($aggregateRootVersion),
-                'timeOfRecording' => $marshaler->marshalValue($timeOfRecording),
-                'payload' => $marshaler->marshalItem(['payload' => $payload])['payload']
+                'event' => ['S' => $event],
+                'aggregateRootId' => ['S' => $aggregateRootId],
+                'eventType' => ['S' => $eventType],
+                'aggregateRootVersion' => ['N' => $aggregateRootVersion],
+                'timeOfRecording' => ['S' => $timeOfRecording],
+                'payload' => ['S' => json_encode($payload)]
             ];
 
             $items[] = [
@@ -66,7 +62,6 @@ class DynamoDBMessageRepository implements MessageRepository
         $batchRequest = ['RequestItems' => [ $this->tableName => $items ]];
 
         try {
-            /** @phpstan-ignore-next-line */
             $this->client->batchWriteItem($batchRequest);
         } catch (Throwable $exception) {
             throw UnableToPersistMessages::dueTo('', $exception);
@@ -85,12 +80,10 @@ class DynamoDBMessageRepository implements MessageRepository
             ]
         ];
 
-        $result = $this->client->getPaginator('Query', $query);
-
         try {
-            $result->valid();
-            return $this->yieldMessagesForResult($result);
-        } catch (Throwable $exception) {
+            $this->client->query($query)->info();
+            return $this->yieldMessagesForResult($this->client->query($query));
+        } catch (\Throwable $exception) {
             throw UnableToRetrieveMessages::dueTo('', $exception);
         }
     }
@@ -108,11 +101,11 @@ class DynamoDBMessageRepository implements MessageRepository
             ]
         ];
 
-        $result = $this->client->getPaginator('Query', $query);
+
 
         try {
-            $result->valid();
-            return $this->yieldMessagesForResult($result);
+            $this->client->query($query)->info();
+            return $this->yieldMessagesForResult($this->client->query($query));
         } catch (Throwable $exception) {
             throw UnableToRetrieveMessages::dueTo('', $exception);
         }
@@ -121,16 +114,13 @@ class DynamoDBMessageRepository implements MessageRepository
     /**
      * @psalm-return Generator<Message>
      */
-    private function yieldMessagesForResult(ResultPaginator $result): Generator
+    private function yieldMessagesForResult(iterable $result): Generator
     {
-        $marshaler = new Marshaler();
-        $items = $result->search('Items');
-
-        foreach ($items as $item) {
-            /** @var array[] $payloadItem */
-            $payloadItem = $marshaler->unmarshalItem($item);
-            if(isset($payloadItem['payload'])) {
-                $message = $this->serializer->unserializePayload($payloadItem['payload']);
+        /** @var array<AttributeValue> $item */
+        foreach ($result as $item) {
+            if(isset($item['payload'])) {
+                $payload = $item['payload'];
+                $message = $this->serializer->unserializePayload(json_decode($payload->getS(), true));
 
                 yield $message;
             }

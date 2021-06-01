@@ -2,7 +2,7 @@
 
 namespace EventSauce\MessageRepository\DynamoDBMessageRepository;
 
-use Aws\DynamoDb\DynamoDbClient;
+use AsyncAws\DynamoDb\DynamoDbClient;
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
@@ -10,17 +10,18 @@ use Ramsey\Uuid\Uuid;
 
 class DynamoDBMessageRepositoryTest extends MessageRepositoryTestCase
 {
+    private DynamoDbClient $client;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $client = $this->client();
+        $this->client = $this->client();
 
-        $tables = $client->listTables();
-        if (in_array($this->tableName, $tables->get('TableNames'), true)){
+        if ($this->tableAlreadyExists($this->tableName)){
             return;
         }
 
-        $client->createTable(
+        $this->client->createTable(
             [
                 'AttributeDefinitions' => [
                     ['AttributeName' => 'aggregateRootId', 'AttributeType' => 'S'],
@@ -37,14 +38,13 @@ class DynamoDBMessageRepositoryTest extends MessageRepositoryTestCase
                 ]
             ]
         );
-        $client->waitUntil('TableExists', ['TableName' => $this->tableName]);
+        $this->client->tableExists(['TableName' => $this->tableName])->wait();
     }
 
     private function client(): DynamoDbClient
     {
         $config = [
             'region' => 'us-west-2',
-            'version' => 'latest',
             'endpoint' => 'http://localhost:8000'
         ];
 
@@ -63,11 +63,11 @@ class DynamoDBMessageRepositoryTest extends MessageRepositoryTestCase
     {
         parent::tearDown();
         $client = $this->client();
-        $tables = $client->listTables();
-        if (!in_array($this->tableName, $tables->get('TableNames'), true)){
-            return;
+
+        if ($this->tableAlreadyExists($this->tableName)) {
+            $client->deleteTable(['TableName' => $this->tableName]);
         }
-        $client->deleteTable(['TableName' => $this->tableName]);
+        $client->tableNotExists(['TableName' => $this->tableName])->wait();
     }
 
     protected function aggregateRootId(): AggregateRootId
@@ -78,5 +78,17 @@ class DynamoDBMessageRepositoryTest extends MessageRepositoryTestCase
     protected function eventId(): string
     {
         return Uuid::uuid4()->toString();
+    }
+
+    private function tableAlreadyExists(string $tableName): bool {
+        $tables = $this->client->listTables();
+
+        foreach ($tables->getIterator() as $table) {
+            if ($table === $tableName) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

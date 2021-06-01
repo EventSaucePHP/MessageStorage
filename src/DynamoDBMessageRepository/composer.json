@@ -3,11 +3,11 @@
     "description": "Message Repository for AWS DynamoDB",
     "autoload": {
         "psr-4": {
-            "EventSauce\\DynamoDBMessageRepository\\": "./"
+            "EventSauce\\MessageRepository\\DynamoDBMessageRepository\\": "./"
         }
     },
     "require": {
-        "aws/aws-sdk-php": "^3.0",
+        "async-aws/dynamo-db": "^1.1",
         "ramsey/uuid": "^4.1",
         "eventsauce/eventsauce": "^1.0"
     },
