@@ -59,14 +59,20 @@ class DynamoDBMessageRepository implements MessageRepository
             ];
         }
 
-        $batchRequest = ['RequestItems' => [ $this->tableName => $items ]];
-
         try {
-            $this->client->batchWriteItem($batchRequest);
+            $this->batchWriteItems($items);
         } catch (Throwable $exception) {
             throw UnableToPersistMessages::dueTo('', $exception);
         }
 
+    }
+
+    private function batchWriteItems(array $items): void
+    {
+        $batches = array_chunk($items, 25,true);
+        foreach ($batches as $batchItems) {
+            $this->client->batchWriteItem(['RequestItems' => [$this->tableName => $batchItems]]);
+        }
     }
 
     public function retrieveAll(AggregateRootId $id): Generator
@@ -118,8 +124,8 @@ class DynamoDBMessageRepository implements MessageRepository
         /** @var array<AttributeValue> $item */
         foreach ($result as $item) {
             if(isset($item['payload'])) {
-                $payload = $item['payload'];
-                $message = $this->serializer->unserializePayload(json_decode($payload->getS(), true));
+                $payload = $item['payload']->getS();
+                $message = $this->serializer->unserializePayload(json_decode($payload ?: '[]', true));
 
                 yield $message;
             }

@@ -4,6 +4,8 @@ namespace EventSauce\MessageRepository\DynamoDBMessageRepository;
 
 use AsyncAws\DynamoDb\DynamoDbClient;
 use EventSauce\EventSourcing\AggregateRootId;
+use EventSauce\EventSourcing\Header;
+use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Ramsey\Uuid\Uuid;
@@ -90,5 +92,27 @@ class DynamoDBMessageRepositoryTest extends MessageRepositoryTestCase
         }
 
         return false;
+    }
+
+    /**
+     * @test
+     */
+    public function inserting_and_retrieving_messages_for_dynamodb(): void
+    {
+        $repository = $this->messageRepository();
+        $messages = [];
+        for ($i = 0; $i < 30; $i++) {
+            $messages[] = $this->createMessage($i)->withHeader(
+                Header::AGGREGATE_ROOT_VERSION,
+                $i
+            );
+        }
+
+
+        $repository->persist(...$messages);
+        /** @var list<Message> $messages */
+        $messages = iterator_to_array($repository->retrieveAll($this->aggregateRootId));
+
+        self::assertCount(30, $messages);
     }
 }
