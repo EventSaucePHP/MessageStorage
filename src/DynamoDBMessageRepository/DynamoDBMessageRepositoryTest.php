@@ -101,18 +101,17 @@ class DynamoDBMessageRepositoryTest extends MessageRepositoryTestCase
     {
         $repository = $this->messageRepository();
         $messages = [];
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 31; $i++) {
             $messages[] = $this->createMessage($i)->withHeader(
                 Header::AGGREGATE_ROOT_VERSION,
                 $i
             );
         }
 
-
         $repository->persist(...$messages);
         /** @var list<Message> $messages */
         $messages = iterator_to_array($repository->retrieveAll($this->aggregateRootId));
 
-        self::assertCount(30, $messages);
+        self::assertCount(31, $messages);
     }
 }
