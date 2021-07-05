@@ -3,16 +3,12 @@
 This repository contains multiple packages that all implement
 a part of EventSauce's storage related interfaces.
 
-- [Message Repositories](#message-repositories)
-- [Message Outboxes](#message-outboxes)
-
 ## Message Repositories
 
 Message repositories are used to store messages in for
 aggregate root reconstitution.
 
 [View the docs](#pending)
-
 
 ## Message Outboxes
 
