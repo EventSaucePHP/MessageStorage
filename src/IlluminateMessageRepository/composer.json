@@ -1,21 +1,21 @@
 {
     "name": "eventsauce/message-repository-for-illuminate",
     "description": "Message Repository for Illuminate",
-    "autoload": {
-        "psr-4": {
-            "EventSauce\\MessageRepository\\IlluminateMessageRepository\\": "./"
-        }
-    },
-    "require": {
-        "eventsauce/eventsauce": "^1.0",
-        "illuminate/database": "^8.35",
-        "ramsey/uuid": "^4.1"
-    },
     "license": "MIT",
     "authors": [
         {
             "name": "Frank de Jonge",
             "email": "info@frankdejonge.nl"
         }
-    ]
+    ],
+    "require": {
+        "eventsauce/eventsauce": "^1.0",
+        "illuminate/database": "^8.35",
+        "ramsey/uuid": "^4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "EventSauce\\MessageRepository\\IlluminateMessageRepository\\": "./"
+        }
+    }
 }

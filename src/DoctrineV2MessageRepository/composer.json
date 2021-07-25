@@ -1,21 +1,21 @@
 {
     "name": "eventsauce/message-repository-for-doctrine-v2",
     "description": "Message Repository for Doctrine DBAL 2",
-    "autoload": {
-        "psr-4": {
-            "EventSauce\\MessageRepository\\DoctrineV2MessageRepository\\": "./"
-        }
-    },
-    "require": {
-        "doctrine/dbal": "^2.6",
-        "eventsauce/eventsauce": "^1.0",
-        "ramsey/uuid": "^4.1"
-    },
     "license": "MIT",
     "authors": [
         {
             "name": "Frank de Jonge",
             "email": "info@frankdejonge.nl"
         }
-    ]
+    ],
+    "require": {
+        "doctrine/dbal": "^2.6",
+        "eventsauce/eventsauce": "^1.0",
+        "ramsey/uuid": "^4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "EventSauce\\MessageRepository\\DoctrineV2MessageRepository\\": "./"
+        }
+    }
 }
