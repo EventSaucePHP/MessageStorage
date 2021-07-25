@@ -1,4 +1,4 @@
-# EventSauce Message Storage MonoRepo
+# EventSauce Message Storage Monorepo
 
 This repository contains multiple packages that all implement
 a part of EventSauce's storage related interfaces.
