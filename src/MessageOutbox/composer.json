@@ -1,20 +1,20 @@
 {
     "name": "eventsauce/message-outbox",
     "description": "Message Outbox foundation for EventSauce",
-    "autoload": {
-        "psr-4": {
-            "EventSauce\\MessageOutbox\\": "./"
-        }
-    },
-    "require": {
-        "eventsauce/eventsauce": "^1.0",
-        "eventsauce/backoff": "^1.0"
-    },
     "license": "MIT",
     "authors": [
         {
             "name": "Frank de Jonge",
             "email": "info@frankdejonge.nl"
         }
-    ]
+    ],
+    "require": {
+        "eventsauce/eventsauce": "^1.0",
+        "eventsauce/backoff": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "EventSauce\\MessageOutbox\\": "./"
+        }
+    }
 }
