@@ -8,7 +8,7 @@ a part of EventSauce's storage related interfaces.
 Message repositories are used to store messages in for
 aggregate root reconstitution.
 
-[View the docs](#pending)
+Docs coming soon...
 
 ## Message Outboxes
 
