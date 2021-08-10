@@ -111,6 +111,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
 
     private function uuidToBinary(string $uuid): string
     {
+        /** @var non-empty-string $uuid */
         return Uuid::fromString($uuid)->getBytes();
     }
 }
