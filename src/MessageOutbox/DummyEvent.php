@@ -9,7 +9,7 @@ use EventSauce\EventSourcing\Serialization\SerializablePayload;
  */
 class DummyEvent implements SerializablePayload
 {
-    public function __construct(public string $value = 'example')
+    final public function __construct(public string $value = 'example')
     {
     }
 
@@ -18,8 +18,8 @@ class DummyEvent implements SerializablePayload
         return ['value' => $this->value];
     }
 
-    public static function fromPayload(array $payload): SerializablePayload
+    public static function fromPayload(array $payload): static
     {
-        return new self($payload['value']);
+        return new static($payload['value']);
     }
 }
