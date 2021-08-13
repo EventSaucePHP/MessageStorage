@@ -29,7 +29,8 @@ abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepository
                 'dbname' => 'outbox_messages',
                 'user' => 'username',
                 'password' => 'password',
-                'host' => '127.0.0.1',
+                'host' => getenv('EVENTSAUCE_TESTING_MYSQL_HOST') ?: '127.0.0.1',
+                'port' => getenv('EVENTSAUCE_TESTING_MYSQL_PORT') ?: '3306',
                 'driver' => 'pdo_mysql',
             ]
         );

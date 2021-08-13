@@ -25,8 +25,8 @@ abstract class IlluminateUuidV4MessageRepositoryTestCase extends MessageReposito
         $manager->addConnection(
             [
                 'driver' => 'mysql',
-                'host' => '127.0.0.1',
-                'port' => '3306',
+                'host' => getenv('EVENTSAUCE_TESTING_MYSQL_HOST') ?: '127.0.0.1',
+                'port' => getenv('EVENTSAUCE_TESTING_MYSQL_PORT') ?: '3306',
                 'database' => 'outbox_messages',
                 'username' => 'username',
                 'password' => 'password',
