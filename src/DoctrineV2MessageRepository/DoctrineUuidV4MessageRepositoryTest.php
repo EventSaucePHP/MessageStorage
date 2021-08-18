@@ -22,7 +22,6 @@ class DoctrineUuidV4MessageRepositoryTest extends MessageRepositoryTestCase
     protected function setUp(): void
     {
         if ( ! interface_exists(ResultStatement::class)) {
-            die("WHAT");
             $this->markTestSkipped('No doctrine v2 installed');
         }
 
