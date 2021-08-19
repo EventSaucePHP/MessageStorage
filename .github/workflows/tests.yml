@@ -44,14 +44,14 @@ jobs:
       - name: Install dependencies
         run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
-      - name: Run PHPStan
-        run: vendor/bin/phpstan analyze -c phpstan.neon
-
       - name: Setup database
         run: php src/wait-for-and-setup-database.php
 
       - name: Execute tests
         run: vendor/bin/phpunit --exclude-group=doctrine2
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyze
 
       - name: Install doctrine2
         run: composer require doctrine/dbal:^2.6 --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
