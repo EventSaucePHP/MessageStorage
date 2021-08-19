@@ -10,14 +10,14 @@ use Ramsey\Uuid\UuidInterface;
 
 final class StringUuidEncoder implements UuidEncoder
 {
-    public function encode(UuidInterface $uuid): string
+    public function encodeUuid(UuidInterface $uuid): string
     {
         return $uuid->toString();
     }
 
     public function encodeString(string $uuid): string
     {
-        return $this->encode(Uuid::fromString($uuid));
+        return $this->encodeUuid(Uuid::fromString($uuid));
     }
 }
 

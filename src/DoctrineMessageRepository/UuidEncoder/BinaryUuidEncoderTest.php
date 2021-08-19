@@ -21,7 +21,7 @@ class BinaryUuidEncoderTest extends TestCase
     {
         $uuid = Uuid::uuid4();
 
-        self::assertSame($uuid->getBytes(), $this->encoder->encode($uuid));
+        self::assertSame($uuid->getBytes(), $this->encoder->encodeUuid($uuid));
         self::assertSame($uuid->getBytes(), $this->encoder->encodeString($uuid->toString()));
     }
 }

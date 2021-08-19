@@ -8,7 +8,7 @@ use Ramsey\Uuid\UuidInterface;
 
 interface UuidEncoder
 {
-    public function encode(UuidInterface $uuid): string;
+    public function encodeUuid(UuidInterface $uuid): string;
 
     public function encodeString(string $uuid): string;
 }

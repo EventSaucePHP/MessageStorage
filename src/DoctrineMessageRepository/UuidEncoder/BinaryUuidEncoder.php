@@ -10,13 +10,13 @@ use Ramsey\Uuid\UuidInterface;
 
 final class BinaryUuidEncoder implements UuidEncoder
 {
-    public function encode(UuidInterface $uuid): string
+    public function encodeUuid(UuidInterface $uuid): string
     {
         return $uuid->getBytes();
     }
 
     public function encodeString(string $uuid): string
     {
-        return $this->encode(Uuid::fromString($uuid));
+        return $this->encodeUuid(Uuid::fromString($uuid));
     }
 }

@@ -21,7 +21,7 @@ class StringUuidEncoderTest extends TestCase
     {
         $uuid = Uuid::uuid4();
 
-        self::assertSame($uuid->toString(), $this->encoder->encode($uuid));
+        self::assertSame($uuid->toString(), $this->encoder->encodeUuid($uuid));
         self::assertSame($uuid->toString(), $this->encoder->encodeString($uuid->toString()));
     }
 }
