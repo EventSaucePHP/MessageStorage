@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "eventsauce/eventsauce": "^1.0",
+        "eventsauce/eventsauce": "^1.0||^2.0",
         "eventsauce/message-outbox": "^0.1.0",
         "illuminate/database": "^8.35"
     },
