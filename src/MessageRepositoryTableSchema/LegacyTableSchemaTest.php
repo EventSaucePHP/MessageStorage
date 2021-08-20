@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace EventSauce\MessageRepository\DoctrineMessageRepository\TableSchema;
+namespace EventSauce\MessageRepository\TableSchema;
 
 use EventSauce\EventSourcing\Header;
-use EventSauce\MessageRepository\DoctrineMessageRepository\TableSchema;
-use EventSauce\MessageRepository\DoctrineMessageRepository\TableSchema\LegacyTableSchema;
 use PHPUnit\Framework\TestCase;
 
 class LegacyTableSchemaTest extends TestCase

@@ -21,11 +21,13 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "EventSauce\\UuidEncoding\\": "src/UuidEncoding",
             "EventSauce\\MessageOutbox\\TestTooling\\": "src/TestTooling",
             "EventSauce\\MessageOutbox\\": "src/MessageOutbox",
             "EventSauce\\MessageOutbox\\IlluminateOutbox\\": "src/IlluminateOutbox",
             "EventSauce\\MessageOutbox\\DoctrineOutbox\\": "src/DoctrineOutbox",
             "EventSauce\\MessageOutbox\\DoctrineV2Outbox\\": "src/DoctrineV2Outbox",
+            "EventSauce\\MessageRepository\\TableSchema\\": "src/MessageRepositoryTableSchema",
             "EventSauce\\MessageRepository\\IlluminateMessageRepository\\": "src/IlluminateMessageRepository",
             "EventSauce\\MessageRepository\\DoctrineMessageRepository\\": "src/DoctrineMessageRepository",
             "EventSauce\\MessageRepository\\DoctrineV2MessageRepository\\": "src/DoctrineV2MessageRepository",

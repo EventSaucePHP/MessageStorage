@@ -3,8 +3,8 @@
 namespace EventSauce\MessageRepository\DoctrineMessageRepository;
 
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
-use EventSauce\MessageRepository\DoctrineMessageRepository\TableSchema\DefaultTableSchema;
-use EventSauce\MessageRepository\DoctrineMessageRepository\UuidEncoder\BinaryUuidEncoder;
+use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
+use EventSauce\UuidEncoding\BinaryUuidEncoder;
 
 class DefaultDoctrineUuidV4MessageRepositoryTest extends DoctrineUuidV4MessageRepositoryTestCase
 {

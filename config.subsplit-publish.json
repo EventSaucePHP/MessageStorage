@@ -48,6 +48,16 @@
             "name": "outbox-testing",
             "directory": "src/TestTooling",
             "target": "git@github.com:EventSaucePHP/MessageOutboxTestTooling.git"
+        },
+        {
+            "name": "table-schema",
+            "directory": "src/MessageRepositoryTableSchema",
+            "target": "git@github.com:EventSaucePHP/MessageRepositoryTableSchema.git"
+        },
+        {
+            "name": "outbox-testing",
+            "directory": "src/UuidEncoding",
+            "target": "git@github.com:EventSaucePHP/UuidEncoding.git"
         }
     ]
 }

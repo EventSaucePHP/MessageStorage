@@ -11,8 +11,10 @@ use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\Serialization\MessageSerializer;
 use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\EventSourcing\UnableToRetrieveMessages;
-use EventSauce\MessageRepository\DoctrineMessageRepository\TableSchema\DefaultTableSchema;
-use EventSauce\MessageRepository\DoctrineMessageRepository\UuidEncoder\BinaryUuidEncoder;
+use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
+use EventSauce\MessageRepository\TableSchema\TableSchema;
+use EventSauce\UuidEncoding\BinaryUuidEncoder;
+use EventSauce\UuidEncoding\UuidEncoder;
 use Generator;
 use Ramsey\Uuid\Uuid;
 use Throwable;
@@ -28,7 +30,6 @@ use function sprintf;
 
 class DoctrineUuidV4MessageRepository implements MessageRepository
 {
-    private int $jsonEncodeOptions = 0;
     private TableSchema $tableSchema;
     private UuidEncoder $uuidEncoder;
 
@@ -36,6 +37,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
         private Connection $connection,
         private string $tableName,
         private MessageSerializer $serializer,
+        private int $jsonEncodeOptions = 0,
         ?TableSchema $tableSchema = null,
         ?UuidEncoder $uuidEncoder = null,
     ) {
@@ -65,18 +67,18 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
             $payload['headers'][Header::EVENT_ID] ??= Uuid::uuid4()->toString();
 
             $messageParameters = [
-                $this->indexParameter(name: 'event_id', index: $index) => $this->uuidEncoder->encodeString($payload['headers'][Header::EVENT_ID]),
-                $this->indexParameter(name: 'aggregate_root_id', index: $index) => $this->uuidEncoder->encodeString($payload['headers'][Header::AGGREGATE_ROOT_ID]),
-                $this->indexParameter(name: 'version', index: $index) => $payload['headers'][Header::AGGREGATE_ROOT_VERSION] ?? 0,
-                $this->indexParameter(name: 'payload', index: $index) => json_encode($payload, $this->jsonEncodeOptions),
+                $this->indexParameter('event_id', $index) => $this->uuidEncoder->encodeString($payload['headers'][Header::EVENT_ID]),
+                $this->indexParameter('aggregate_root_id', $index) => $this->uuidEncoder->encodeString($payload['headers'][Header::AGGREGATE_ROOT_ID]),
+                $this->indexParameter('version', $index) => $payload['headers'][Header::AGGREGATE_ROOT_VERSION] ?? 0,
+                $this->indexParameter('payload', $index) => json_encode($payload, $this->jsonEncodeOptions),
             ];
 
             foreach ($this->tableSchema->additionalColumns() as $column => $header) {
-                $messageParameters[$this->indexParameter(name: $column, index: $index)] = $payload['headers'][$header];
+                $messageParameters[$this->indexParameter($column, $index)] = $payload['headers'][$header];
             }
 
             // Creates a values line like: (:event_id_1, :aggregate_root_id_1, ...)
-            $insertValues[] = implode(', ', $this->nameParameters(array_keys($messageParameters)));
+            $insertValues[] = implode(', ', $this->formatNamedParameters(array_keys($messageParameters)));
 
             // Flatten the message parameters into the query parameters
             $insertParameters = array_merge($insertParameters, $messageParameters);
@@ -101,7 +103,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
         return $name . '_' . $index;
     }
 
-    private function nameParameters(array $parameters): array
+    private function formatNamedParameters(array $parameters): array
     {
         return array_map(static fn (string $name) => ':' . $name, $parameters);
     }

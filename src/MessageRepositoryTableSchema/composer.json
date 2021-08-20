@@ -1,0 +1,16 @@
+{
+    "name": "eventsauce/message-repository-table-schema",
+    "description": "Message Repository Table Schema",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Frank de Jonge",
+            "email": "info@frankdejonge.nl"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "EventSauce\\MessageRepository\\TableSchema\\": "./"
+        }
+    }
+}

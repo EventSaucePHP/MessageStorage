@@ -3,10 +3,8 @@
 namespace EventSauce\MessageRepository\DoctrineMessageRepository;
 
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
-use EventSauce\MessageRepository\DoctrineMessageRepository\TableSchema\DefaultTableSchema;
-use EventSauce\MessageRepository\DoctrineMessageRepository\TableSchema\LegacyTableSchema;
-use EventSauce\MessageRepository\DoctrineMessageRepository\UuidEncoder\BinaryUuidEncoder;
-use EventSauce\MessageRepository\DoctrineMessageRepository\UuidEncoder\StringUuidEncoder;
+use EventSauce\MessageRepository\TableSchema\LegacyTableSchema;
+use EventSauce\UuidEncoding\StringUuidEncoder;
 
 class LegacyDoctrineUuidV4MessageRepositoryTest extends DoctrineUuidV4MessageRepositoryTestCase
 {
@@ -21,7 +19,7 @@ class LegacyDoctrineUuidV4MessageRepositoryTest extends DoctrineUuidV4MessageRep
         return new DoctrineUuidV4MessageRepository(
             connection: $this->connection,
             tableName: $this->tableName,
-            serializer: new ConstructingMessageSerializer(),
+            serializer: new MySQL8DateFormatting(new ConstructingMessageSerializer()),
             tableSchema: new LegacyTableSchema(),
             uuidEncoder: new StringUuidEncoder(),
         );

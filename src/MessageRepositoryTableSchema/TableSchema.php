@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace EventSauce\MessageRepository\DoctrineMessageRepository;
+namespace EventSauce\MessageRepository\TableSchema;
 
 interface TableSchema
 {
