@@ -1,6 +1,6 @@
 <?php
 
-namespace EventSauce\MessageRepository\DoctrineMessageRepository;
+namespace EventSauce\MessageRepository\DoctrineV2MessageRepository;
 
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
