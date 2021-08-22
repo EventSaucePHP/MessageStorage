@@ -6,7 +6,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\DriverManager;
 use EventSauce\EventSourcing\AggregateRootId;
-use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Ramsey\Uuid\Uuid;
 
