@@ -56,7 +56,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
             $this->tableSchema->aggregateRootIdColumn(),
             $this->tableSchema->versionColumn(),
             $this->tableSchema->payloadColumn(),
-            ...array_keys($this->tableSchema->additionalColumns()),
+            ...array_keys($additionalColumns = $this->tableSchema->additionalColumns()),
         ];
 
         $insertValues = [];
@@ -73,7 +73,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
                 $this->indexParameter('payload', $index) => json_encode($payload, $this->jsonEncodeOptions),
             ];
 
-            foreach ($this->tableSchema->additionalColumns() as $column => $header) {
+            foreach ($additionalColumns as $column => $header) {
                 $messageParameters[$this->indexParameter($column, $index)] = $payload['headers'][$header];
             }
 
