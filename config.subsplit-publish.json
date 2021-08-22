@@ -1,7 +1,9 @@
 {
     "dependencies-must-satisfy": {
         "eventsauce/eventsauce": "1.0.0",
-        "eventsauce/message-outbox": "0.1.0"
+        "eventsauce/message-outbox": "0.1.0",
+        "eventsauce/uuid-encoding": "0.2.0",
+        "eventsauce/message-repository-table-schema": "0.2.0"
     },
     "sub-splits": [
         {
