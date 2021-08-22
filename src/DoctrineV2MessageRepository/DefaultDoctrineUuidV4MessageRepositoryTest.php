@@ -11,11 +11,7 @@ use EventSauce\UuidEncoding\BinaryUuidEncoder;
  */
 class DefaultDoctrineUuidV4MessageRepositoryTest extends DoctrineUuidV4MessageRepositoryTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->tableName = 'domain_messages_uuid';
-    }
+    protected string $tableName = 'domain_messages_uuid';
 
     protected function messageRepository(): DoctrineUuidV4MessageRepository
     {
