@@ -17,8 +17,8 @@ abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepository
 
     protected function setUp(): void
     {
-        if (class_exists(ResultStatement::class)) {
-            $this->markTestSkipped('Doctrine v2 installed');
+        if ( ! class_exists(ResultStatement::class)) {
+            $this->markTestSkipped('No Doctrine v2 installed');
         }
 
         parent::setUp();
