@@ -20,6 +20,8 @@ use Generator;
 use Ramsey\Uuid\Uuid;
 use Throwable;
 
+use Traversable;
+
 use function array_keys;
 use function array_map;
 use function array_merge;
@@ -119,7 +121,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
             /** @var ResultStatement $resultStatement */
             $resultStatement = $builder->execute();
 
-            return $this->yieldMessagesFromPayloads($resultStatement->iterateColumn());
+            return $this->yieldMessagesFromPayloads($resultStatement);
         } catch (Throwable $exception) {
             throw UnableToRetrieveMessages::dueTo('', $exception);
         }
@@ -140,7 +142,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
             /** @var ResultStatement $resultStatement */
             $resultStatement = $builder->execute();
 
-            return $this->yieldMessagesFromPayloads($resultStatement->iterateColumn());
+            return $this->yieldMessagesFromPayloads($resultStatement);
         } catch (Throwable $exception) {
             throw UnableToRetrieveMessages::dueTo('', $exception);
         }
@@ -159,10 +161,10 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
     /**
      * @psalm-return Generator<Message>
      */
-    private function yieldMessagesFromPayloads(iterable $payloads): Generator
+    private function yieldMessagesFromPayloads(Traversable $payloads): Generator
     {
         foreach ($payloads as $payload) {
-            yield $message = $this->serializer->unserializePayload(json_decode($payload, true));
+            yield $message = $this->serializer->unserializePayload(json_decode($payload['payload'], true));
         }
 
         return isset($message)

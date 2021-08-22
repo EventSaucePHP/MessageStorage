@@ -10,6 +10,8 @@ use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Ramsey\Uuid\Uuid;
 
 use function class_exists;
+use function interface_exists;
+use function var_dump;
 
 abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepositoryTestCase
 {
@@ -17,7 +19,7 @@ abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepository
 
     protected function setUp(): void
     {
-        if ( ! class_exists(ResultStatement::class)) {
+        if ( ! interface_exists(ResultStatement::class)) {
             $this->markTestSkipped('No Doctrine v2 installed');
         }
 
