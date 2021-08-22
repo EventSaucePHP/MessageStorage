@@ -55,7 +55,7 @@
             "target": "git@github.com:EventSaucePHP/MessageRepositoryTableSchema.git"
         },
         {
-            "name": "outbox-testing",
+            "name": "uuid-encoding",
             "directory": "src/UuidEncoding",
             "target": "git@github.com:EventSaucePHP/UuidEncoding.git"
         }
