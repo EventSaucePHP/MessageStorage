@@ -9,6 +9,10 @@ use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\Serialization\MessageSerializer;
 use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\EventSourcing\UnableToRetrieveMessages;
+use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
+use EventSauce\MessageRepository\TableSchema\TableSchema;
+use EventSauce\UuidEncoding\BinaryUuidEncoder;
+use EventSauce\UuidEncoding\UuidEncoder;
 use Generator;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Collection;
@@ -19,13 +23,19 @@ use function count;
 
 class IlluminateUuidV4MessageRepository implements MessageRepository
 {
-    private int $jsonEncodeOptions = 0;
+    private TableSchema $tableSchema;
+    private UuidEncoder $uuidEncoder;
 
     public function __construct(
         private ConnectionInterface $connection,
         private string $tableName,
         private MessageSerializer $serializer,
+        private int $jsonEncodeOptions = 0,
+        ?TableSchema $tableSchema = null,
+        ?UuidEncoder $uuidEncoder = null,
     ) {
+        $this->tableSchema = $tableSchema ?? new DefaultTableSchema();
+        $this->uuidEncoder = $uuidEncoder ?? new BinaryUuidEncoder();
     }
 
     public function persist(Message ...$messages): void
@@ -35,15 +45,25 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
         }
 
         $values = [];
+        $versionColumn = $this->tableSchema->versionColumn();
+        $eventIdColumn = $this->tableSchema->eventIdColumn();
+        $payloadColumn = $this->tableSchema->payloadColumn();
+        $aggregateRootIdColumn = $this->tableSchema->aggregateRootIdColumn();
+        $additionalColumns = $this->tableSchema->additionalColumns();
 
         foreach ($messages as $message) {
             $parameters = [];
             $payload = $this->serializer->serializeMessage($message);
-            $parameters['version'] = $payload['headers'][Header::AGGREGATE_ROOT_VERSION] ?? 0;
+            $parameters[$versionColumn] = $payload['headers'][Header::AGGREGATE_ROOT_VERSION] ?? 0;
             $payload['headers'][Header::EVENT_ID] = $payload['headers'][Header::EVENT_ID] ?? Uuid::uuid4()->toString();
-            $parameters['event_id'] = $this->uuidToBinary($payload['headers'][Header::EVENT_ID]);
-            $parameters['payload'] = json_encode($payload, $this->jsonEncodeOptions);
-            $parameters['aggregate_root_id'] = $this->uuidToBinary($payload['headers'][Header::AGGREGATE_ROOT_ID] ?? '');
+            $parameters[$eventIdColumn] = $this->uuidEncoder->encodeString($payload['headers'][Header::EVENT_ID]);
+            $parameters[$payloadColumn] = json_encode($payload, $this->jsonEncodeOptions);
+            $parameters[$aggregateRootIdColumn] = $this->uuidEncoder->encodeString($payload['headers'][Header::AGGREGATE_ROOT_ID]);
+
+            foreach ($additionalColumns as $column => $header) {
+                $parameters[$column] = $payload['headers'][$header];
+            }
+
             $values[] = $parameters;
         }
 
@@ -57,8 +77,8 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
     public function retrieveAll(AggregateRootId $id): Generator
     {
         $builder = $this->connection->table($this->tableName)
-            ->where('aggregate_root_id', $this->uuidToBinary($id->toString()))
-            ->orderBy('version', 'ASC');
+            ->where($this->tableSchema->aggregateRootIdColumn(), $this->uuidEncoder->encodeString($id->toString()))
+            ->orderBy($this->tableSchema->versionColumn(), 'ASC');
 
         try {
             return $this->yieldMessagesForResult($builder->get(['payload']));
@@ -70,10 +90,11 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
     /** @psalm-return Generator<Message> */
     public function retrieveAllAfterVersion(AggregateRootId $id, int $aggregateRootVersion): Generator
     {
+        $versionColumn = $this->tableSchema->versionColumn();
         $builder = $this->connection->table($this->tableName)
-            ->where('aggregate_root_id', $this->uuidToBinary($id->toString()))
-            ->where('version', '>', $aggregateRootVersion)
-            ->orderBy('version', 'ASC');
+            ->where($this->tableSchema->aggregateRootIdColumn(), $this->uuidEncoder->encodeString($id->toString()))
+            ->where($versionColumn, '>', $aggregateRootVersion)
+            ->orderBy($versionColumn, 'ASC');
 
         try {
             return $this->yieldMessagesForResult($builder->get(['payload']));
@@ -93,11 +114,5 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
         }
 
         return isset($message) ? $message->header(Header::AGGREGATE_ROOT_VERSION) ?: 0 : 0;
-    }
-
-    private function uuidToBinary(string $uuid): string
-    {
-        /** @var non-empty-string $uuid */
-        return Uuid::fromString($uuid)->getBytes();
     }
 }

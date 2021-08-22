@@ -16,7 +16,7 @@ use function iterator_to_array;
 
 abstract class MessageRepositoryTestCase extends TestCase
 {
-    protected string $tableName = '';
+    protected string $tableName = 'domain_messages_uuid';
     protected AggregateRootId $aggregateRootId;
 
     abstract protected function messageRepository(): MessageRepository;
@@ -27,7 +27,6 @@ abstract class MessageRepositoryTestCase extends TestCase
     {
         parent::setUp();
         $this->aggregateRootId = $this->aggregateRootId();
-        $this->tableName = 'domain_messages_uuid';
     }
 
     protected function createMessage(string $value): Message

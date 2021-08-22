@@ -11,11 +11,7 @@ use EventSauce\UuidEncoding\StringUuidEncoder;
  */
 class LegacyDoctrineUuidV4MessageRepositoryTest extends DoctrineUuidV4MessageRepositoryTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->tableName = 'legacy_domain_messages_uuid';
-    }
+    protected string $tableName = 'legacy_domain_messages_uuid';
 
     protected function messageRepository(): DoctrineUuidV4MessageRepository
     {

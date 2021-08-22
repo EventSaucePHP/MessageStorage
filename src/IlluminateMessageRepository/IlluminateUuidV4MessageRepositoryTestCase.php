@@ -10,14 +10,16 @@ use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Connection;
 use Ramsey\Uuid\Uuid;
 
-class IlluminateUuidV4MessageRepositoryTest extends MessageRepositoryTestCase
+/**
+ * @group illuminate
+ */
+abstract class IlluminateUuidV4MessageRepositoryTestCase extends MessageRepositoryTestCase
 {
-    private Connection $connection;
+    protected Connection $connection;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->tableName = 'domain_messages_uuid';
 
         $manager = new Manager;
         $manager->addConnection(
@@ -34,14 +36,7 @@ class IlluminateUuidV4MessageRepositoryTest extends MessageRepositoryTestCase
         );
 
         $this->connection = $manager->getConnection();
-        $this->connection->table('domain_messages_uuid')->truncate();
-    }
-
-    protected function messageRepository(): MessageRepository
-    {
-        return new IlluminateUuidV4MessageRepository(
-            $this->connection, $this->tableName, new ConstructingMessageSerializer(),
-        );
+        $this->connection->table($this->tableName)->truncate();
     }
 
     protected function aggregateRootId(): AggregateRootId
