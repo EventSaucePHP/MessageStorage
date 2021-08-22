@@ -6,6 +6,9 @@ use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageRepository\TableSchema\LegacyTableSchema;
 use EventSauce\UuidEncoding\StringUuidEncoder;
 
+/**
+ * @group doctrine2
+ */
 class LegacyDoctrineUuidV4MessageRepositoryTest extends DoctrineUuidV4MessageRepositoryTestCase
 {
     protected function setUp(): void

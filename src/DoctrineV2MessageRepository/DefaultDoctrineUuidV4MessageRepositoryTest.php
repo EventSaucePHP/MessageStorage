@@ -6,6 +6,9 @@ use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
 use EventSauce\UuidEncoding\BinaryUuidEncoder;
 
+/**
+ * @group doctrine2
+ */
 class DefaultDoctrineUuidV4MessageRepositoryTest extends DoctrineUuidV4MessageRepositoryTestCase
 {
     protected function setUp(): void
