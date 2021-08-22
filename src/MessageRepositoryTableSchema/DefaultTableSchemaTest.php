@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace EventSauce\MessageRepository\DoctrineMessageRepository\TableSchema;
+namespace EventSauce\MessageRepository\TableSchema;
 
-use EventSauce\MessageRepository\DoctrineMessageRepository\TableSchema;
-use EventSauce\MessageRepository\DoctrineMessageRepository\TableSchema\DefaultTableSchema;
 use PHPUnit\Framework\TestCase;
 
 class DefaultTableSchemaTest extends TestCase

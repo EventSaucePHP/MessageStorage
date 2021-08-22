@@ -6,8 +6,8 @@
 
 ```php
 use EventSauce\MessageRepository\DoctrineMessageRepository\DoctrineUuidV4MessageRepository;
-use EventSauce\MessageRepository\DoctrineMessageRepository\TableSchema\DefaultTableSchema;
-use EventSauce\MessageRepository\DoctrineMessageRepository\UuidEncoder\BinaryUuidEncoder;
+use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
+use EventSauce\UuidEncoding\BinaryUuidEncoder;
 
 $messageRepository = new DoctrineUuidV4MessageRepository(
     connection: $doctrineDbalConnection,

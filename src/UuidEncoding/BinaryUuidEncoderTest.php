@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace EventSauce\MessageRepository\DoctrineMessageRepository\UuidEncoder;
+namespace EventSauce\UuidEncoding;
 
-use EventSauce\MessageRepository\DoctrineMessageRepository\UuidEncoder\BinaryUuidEncoder;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 

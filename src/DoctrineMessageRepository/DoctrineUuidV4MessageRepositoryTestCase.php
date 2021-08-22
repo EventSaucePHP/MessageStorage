@@ -6,15 +6,14 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\DriverManager;
 use EventSauce\EventSourcing\AggregateRootId;
-use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Ramsey\Uuid\Uuid;
 
 use function class_exists;
 
-class DoctrineUuidV4MessageRepositoryTest extends MessageRepositoryTestCase
+abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepositoryTestCase
 {
-    private Connection $connection;
+    protected Connection $connection;
 
     protected function setUp(): void
     {
@@ -33,15 +32,10 @@ class DoctrineUuidV4MessageRepositoryTest extends MessageRepositoryTestCase
             ]
         );
         $this->connection = $connection;
-        $this->connection->executeQuery('TRUNCATE TABLE `domain_messages_uuid`');
+        $this->connection->executeQuery('TRUNCATE TABLE `' . $this->tableName . '`');
     }
 
-    protected function messageRepository(): DoctrineUuidV4MessageRepository
-    {
-        return new DoctrineUuidV4MessageRepository(
-            $this->connection, $this->tableName, new ConstructingMessageSerializer(),
-        );
-    }
+    abstract protected function messageRepository(): DoctrineUuidV4MessageRepository;
 
     protected function aggregateRootId(): AggregateRootId
     {

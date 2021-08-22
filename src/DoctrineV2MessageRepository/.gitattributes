@@ -1,2 +1,4 @@
 **/*Test.php export-ignore
+**/*TestCase.php export-ignore
 Dummy*.php export-ignore
+MySQL8DateFormatting.php export-ignore
