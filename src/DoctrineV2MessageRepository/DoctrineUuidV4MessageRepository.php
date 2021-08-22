@@ -140,7 +140,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
             /** @var ResultStatement $resultStatement */
             $resultStatement = $builder->execute();
 
-            return $this->yieldMessagesFromPayloads($resultStatement->iterateColumn());
+            return $this->yieldMessagesFromPayloads($resultStatement);
         } catch (Throwable $exception) {
             throw UnableToRetrieveMessages::dueTo('', $exception);
         }
