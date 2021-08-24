@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `domain_messages_uuid` (
   PRIMARY KEY (`event_id`),
   KEY (`aggregate_root_id`),
   KEY `reconstitution` (`aggregate_root_id`, `version` ASC)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB;
 SQL
 );
 
@@ -77,5 +77,5 @@ CREATE TABLE IF NOT EXISTS legacy_domain_messages_uuid (
     payload JSON NOT NULL,
     INDEX aggregate_root_id (aggregate_root_id),
     UNIQUE KEY unique_id_and_version (aggregate_root_id, aggregate_root_version ASC)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE = InnoDB
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB
 ");
