@@ -17,5 +17,10 @@
         "psr-4": {
             "EventSauce\\MessageOutbox\\IlluminateOutbox\\": "./"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.2-dev"
+        }
     }
 }

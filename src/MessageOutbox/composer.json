@@ -16,5 +16,10 @@
         "psr-4": {
             "EventSauce\\MessageOutbox\\": "./"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.2-dev"
+        }
     }
 }
