@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "eventsauce/eventsauce": "^1.0",
+        "eventsauce/eventsauce": "^1.0||^2.0",
         "eventsauce/message-repository-table-schema": "^0.2.0",
         "eventsauce/uuid-encoding": "^0.2.0",
         "illuminate/database": "^8.35",
@@ -18,6 +18,11 @@
     "autoload": {
         "psr-4": {
             "EventSauce\\MessageRepository\\IlluminateMessageRepository\\": "./"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.3-dev"
         }
     }
 }
