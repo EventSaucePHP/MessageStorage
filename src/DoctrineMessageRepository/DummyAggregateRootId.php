@@ -18,11 +18,11 @@ final class DummyAggregateRootId implements AggregateRootId
 
     public static function fromString(string $aggregateRootId): static
     {
-        return new self($aggregateRootId);
+        return new static($aggregateRootId);
     }
 
     public static function generate(): static
     {
-        return new self(Uuid::uuid4()->toString());
+        return new static(Uuid::uuid4()->toString());
     }
 }

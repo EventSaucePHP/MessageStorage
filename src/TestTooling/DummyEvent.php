@@ -20,6 +20,6 @@ class DummyEvent implements SerializablePayload
 
     public static function fromPayload(array $payload): static
     {
-        return new self($payload['value']);
+        return new static($payload['value']);
     }
 }
