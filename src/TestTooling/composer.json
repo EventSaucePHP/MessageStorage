@@ -10,7 +10,7 @@
     ],
     "require": {
         "eventsauce/eventsauce": "^1.0||^2.0",
-        "eventsauce/message-outbox": "^0.1.0",
+        "eventsauce/message-outbox": "^0.1||^0.2||^0.3",
         "phpunit/phpunit": "^9.5",
         "ramsey/uuid": "^4.1"
     },
