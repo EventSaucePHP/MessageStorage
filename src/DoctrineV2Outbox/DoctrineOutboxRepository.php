@@ -100,7 +100,7 @@ class DoctrineOutboxRepository implements OutboxRepository
         $statement->bindValue(1, $amount, ParameterType::INTEGER);
         $statement->execute();
 
-        return $statement->rowCount();
+        return (int) $statement->rowCount();
     }
 
     public function numberOfMessages(): int
