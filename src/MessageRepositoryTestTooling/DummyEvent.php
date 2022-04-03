@@ -18,7 +18,7 @@ final class DummyEvent implements SerializablePayload
         return ['value' => $this->value];
     }
 
-    public static function fromPayload(array $payload): SerializablePayload
+    public static function fromPayload(array $payload): static
     {
         return new self($payload['value']);
     }
