@@ -10,8 +10,8 @@
     ],
     "require": {
         "eventsauce/eventsauce": "^1.0||^2.0",
-        "eventsauce/message-repository-table-schema": "^0.2.0",
-        "eventsauce/uuid-encoding": "^0.2.0",
+        "eventsauce/message-repository-table-schema": "^0.2||^0.3",
+        "eventsauce/uuid-encoding": "^0.2||^0.3",
         "illuminate/database": "^8.35",
         "ramsey/uuid": "^4.1"
     },
