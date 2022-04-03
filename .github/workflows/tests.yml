@@ -3,6 +3,9 @@ name: Tests
 on:
   push:
   pull_request:
+    branches:
+      - main
+      - support/eventsauce-v2
   schedule:
     - cron: '0 0 * * *'
 
