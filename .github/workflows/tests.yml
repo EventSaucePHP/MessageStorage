@@ -2,13 +2,7 @@ name: Tests
 
 on:
   push:
-    branches:
-      - main
-      - support/eventsauce-v2
   pull_request:
-    branches:
-      - main
-      - support/eventsauce-v2
   schedule:
     - cron: '0 0 * * *'
 
