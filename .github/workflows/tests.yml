@@ -25,10 +25,11 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [8.0]
+        php: [8.0, 8.1]
+        eventsauce: ['^1.0', '^2.0']
         stability: [prefer-lowest, prefer-stable]
 
-    name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
+    name: PHP ${{ matrix.php }} - EventSauce ${{ matrix.eventsauce }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout code
@@ -40,6 +41,10 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip
           coverage: none
+
+      - name: Install specific eventsauce version
+        run: |
+          composer require "eventsauce/eventsauce=${{ matrix.eventsauce }}" -w --prefer-dist --no-interaction --no-update
 
       - name: Install dependencies
         run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
