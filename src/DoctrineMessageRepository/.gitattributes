@@ -1,3 +1,5 @@
+.github export-ignore
+.gitattributes export-ignore
 **/*Test.php export-ignore
 **/*TestCase.php export-ignore
 Dummy*.php export-ignore
