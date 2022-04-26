@@ -75,7 +75,7 @@ jobs:
       - name: Install illuminate/database 9
         run: composer require illuminate/database:^9.0 --${{ matrix.stability }} -w --prefer-dist --no-interaction --no-progress
 
-      - name: Execute doctrine2 tests
+      - name: Execute illuminate tests
         run: vendor/bin/phpunit --group=illuminate
 
       - name: Run PHPStan
