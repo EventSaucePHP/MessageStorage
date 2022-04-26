@@ -46,11 +46,16 @@ jobs:
         run: |
           composer require "eventsauce/eventsauce=${{ matrix.eventsauce }}" -w --prefer-dist --no-interaction --no-update
 
+      - name: Install specific doctrine version
+        run: |
+          composer require "doctrine/dbal:^3.1" -w --prefer-dist --no-interaction --no-update
+
+      - name: Install specific illuminate version
+        run: |
+          composer require "illuminate/database:^8.35" -w --prefer-dist --no-interaction --no-update
+
       - name: Install dependencies
         run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
-
-      - name: Install doctrine3
-        run: composer require doctrine/dbal:^3.1 --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
       - name: Setup database
         run: php src/wait-for-and-setup-database.php
@@ -66,6 +71,12 @@ jobs:
 
       - name: Execute doctrine2 tests
         run: vendor/bin/phpunit --group=doctrine2
+
+      - name: Install illuminate/database 9
+        run: composer require illuminate/database:^9.0 --${{ matrix.stability }} -w --prefer-dist --no-interaction --no-progress
+
+      - name: Execute illuminate tests
+        run: vendor/bin/phpunit --group=illuminate
 
       - name: Run PHPStan
         run: vendor/bin/phpstan analyze -c phpstan.doctrine2.neon
