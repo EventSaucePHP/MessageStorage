@@ -3,8 +3,6 @@
 namespace EventSauce\MessageRepository\IlluminateMessageRepository;
 
 use EventSauce\EventSourcing\AggregateRootId;
-use EventSauce\EventSourcing\MessageRepository;
-use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\Connection;

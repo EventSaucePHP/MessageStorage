@@ -6,9 +6,7 @@ use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\EventSourcing\Serialization\MySQL8DateFormatting;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
-use EventSauce\MessageRepository\TableSchema\LegacyTableSchema;
 use EventSauce\UuidEncoding\BinaryUuidEncoder;
-use EventSauce\UuidEncoding\StringUuidEncoder;
 
 /**
  * @group illuminate
