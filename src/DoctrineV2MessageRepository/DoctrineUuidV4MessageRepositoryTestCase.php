@@ -10,6 +10,7 @@ use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Ramsey\Uuid\Uuid;
 
 use function class_exists;
+use function getenv;
 use function interface_exists;
 use function var_dump;
 
@@ -24,14 +25,11 @@ abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepository
         }
 
         parent::setUp();
+        $host = getenv('EVENTSAUCE_TESTING_MYSQL_HOST') ?: '127.0.0.1';
+        $port = getenv('EVENTSAUCE_TESTING_MYSQL_PORT') ?: '3306';
         $connection = DriverManager::getConnection(
             [
-                'dbname' => 'outbox_messages',
-                'user' => 'username',
-                'password' => 'password',
-                'host' => getenv('EVENTSAUCE_TESTING_MYSQL_HOST') ?: '127.0.0.1',
-                'port' => getenv('EVENTSAUCE_TESTING_MYSQL_PORT') ?: '3306',
-                'driver' => 'pdo_mysql',
+                'url' => "mysql://username:password@$host:$port/outbox_messages",
             ]
         );
         $this->connection = $connection;

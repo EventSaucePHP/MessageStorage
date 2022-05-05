@@ -104,13 +104,13 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
     }
 
     /**
-     * @psalm-return Generator<Message>
+     * @param Collection<int, mixed> $result
+     * @psalm-return Generator<int, Message>
      */
     private function yieldMessagesForResult(Collection $result): Generator
     {
         foreach ($result as $row) {
-            $message = $this->serializer->unserializePayload(json_decode($row->payload, true));
-            yield $message;
+            yield $message = $this->serializer->unserializePayload(json_decode($row->payload, true));
         }
 
         return isset($message) ? $message->header(Header::AGGREGATE_ROOT_VERSION) ?: 0 : 0;
