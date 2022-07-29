@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageRepository;
+use EventSauce\EventSourcing\PaginationCursor;
 use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\MessageOutbox\OutboxRepository;
 use Generator;
@@ -45,5 +46,10 @@ class DoctrineTransactionalMessageRepository implements MessageRepository
     public function retrieveAllAfterVersion(AggregateRootId $id, int $aggregateRootVersion): Generator
     {
         return $this->messageRepository->retrieveAllAfterVersion($id, $aggregateRootVersion);
+    }
+
+    public function paginate(int $perPage, ?PaginationCursor $cursor = null): Generator
+    {
+        return $this->messageRepository->paginate($perPage, $cursor);
     }
 }

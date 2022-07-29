@@ -8,6 +8,7 @@ use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageRepository;
+use EventSauce\EventSourcing\PaginationCursor;
 use EventSauce\EventSourcing\Serialization\MessageSerializer;
 use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\EventSourcing\UnableToRetrieveMessages;
@@ -161,5 +162,23 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
         return isset($message)
             ? $message->header(Header::AGGREGATE_ROOT_VERSION) ?: 0
             : 0;
+    }
+
+    public function paginate(int $perPage, ?PaginationCursor $cursor = null): Generator
+    {
+        $offset = $cursor?->intParam('offset') ?: 0;
+        $builder = $this->connection->createQueryBuilder();
+        $builder->select($this->tableSchema->payloadColumn());
+        $builder->from($this->tableName);
+        $builder->orderBy($this->tableSchema->incrementalIdColumn(), 'ASC');
+        $builder->setMaxResults($perPage);
+        $builder->setFirstResult($offset);
+
+        foreach ($builder->executeQuery()->iterateColumn() as $payload) {
+            $offset++;
+            yield $this->serializer->unserializePayload(json_decode($payload, true));
+        }
+
+        return new PaginationCursor(['offset' => $offset]);
     }
 }

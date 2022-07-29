@@ -4,20 +4,27 @@ namespace EventSauce\MessageRepository\TestTooling;
 
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\DefaultHeadersDecorator;
+use EventSauce\EventSourcing\DotSeparatedSnakeCaseInflector;
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageRepository;
+use EventSauce\EventSourcing\PaginationCursor;
 use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\EventSourcing\UnableToRetrieveMessages;
 use EventSauce\MessageOutbox\TestTooling\DummyEvent;
 use PHPUnit\Framework\TestCase;
 
+use Ramsey\Uuid\Uuid;
+
+use function array_slice;
+use function get_class;
 use function iterator_to_array;
 
 abstract class MessageRepositoryTestCase extends TestCase
 {
     protected string $tableName = 'domain_messages_uuid';
     protected AggregateRootId $aggregateRootId;
+    private string $aggregateRootIdType = '';
 
     abstract protected function messageRepository(): MessageRepository;
     abstract protected function aggregateRootId(): AggregateRootId;
@@ -27,13 +34,15 @@ abstract class MessageRepositoryTestCase extends TestCase
     {
         parent::setUp();
         $this->aggregateRootId = $this->aggregateRootId();
+        $this->aggregateRootIdType = (new DotSeparatedSnakeCaseInflector())->classNameToType(get_class($this->aggregateRootId));
     }
 
     protected function createMessage(string $value): Message
     {
         return (new DefaultHeadersDecorator())
             ->decorate(new Message(new DummyEvent($value)))
-            ->withHeader(Header::AGGREGATE_ROOT_ID, $this->aggregateRootId);
+            ->withHeader(Header::AGGREGATE_ROOT_ID, $this->aggregateRootId)
+            ->withHeader(Header::AGGREGATE_ROOT_ID_TYPE, $this->aggregateRootIdType);
     }
 
     /**
@@ -80,6 +89,56 @@ abstract class MessageRepositoryTestCase extends TestCase
 
         self::assertCount(1, $messages);
         self::assertCount(0, $noMessages);
+    }
+
+    /**
+     * @test
+     */
+    public function fetching_the_first_page_for_pagination(): void
+    {
+        $repository = $this->messageRepository();
+        $messages = [];
+
+        for ($i = 0; $i < 10; $i++) {
+            $messages[] = $this->createMessage('numnber: ' . $i)->withHeader(Header::AGGREGATE_ROOT_VERSION, $i)
+                ->withHeader(Header::EVENT_ID, Uuid::uuid4()->toString());
+        }
+
+        $repository->persist(...$messages);
+
+        $page = $repository->paginate(4);
+        $messagesFromPage = iterator_to_array($page, false);
+        $expectedMessages = array_slice($messages, 0, 4);
+        $cursor = $page->getReturn();
+
+        self::assertEquals($expectedMessages, $messagesFromPage);
+        self::assertInstanceOf(PaginationCursor::class, $cursor);
+    }
+
+    /**
+     * @test
+     */
+    public function fetching_the_next_page_for_pagination(): void
+    {
+        $repository = $this->messageRepository();
+        $messages = [];
+
+        for ($i = 0; $i < 10; $i++) {
+            $messages[] = $this->createMessage('numnber: ' . $i)->withHeader(Header::AGGREGATE_ROOT_VERSION, $i)
+                ->withHeader(Header::EVENT_ID, Uuid::uuid4()->toString());
+        }
+
+        $repository->persist(...$messages);
+        $page = $repository->paginate(4);
+        iterator_to_array($page, false);
+        $cursor = $page->getReturn();
+
+        $page = $repository->paginate(4, $cursor);
+        $messagesFromPage = iterator_to_array($page, false);
+        $expectedMessages = array_slice($messages, 4, 4);
+
+        self::assertEquals($expectedMessages, $messagesFromPage);
+        self::assertInstanceOf(PaginationCursor::class, $cursor);
     }
 
     /**

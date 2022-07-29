@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "eventsauce/eventsauce": "^1.0||^2.0",
+        "eventsauce/eventsauce": "^3.0",
         "phpunit/phpunit": "^9.5"
     },
     "autoload": {
