@@ -24,7 +24,6 @@ abstract class MessageRepositoryTestCase extends TestCase
 {
     protected string $tableName = 'domain_messages_uuid';
     protected AggregateRootId $aggregateRootId;
-    private string $aggregateRootIdType = '';
 
     abstract protected function messageRepository(): MessageRepository;
     abstract protected function aggregateRootId(): AggregateRootId;
@@ -34,15 +33,17 @@ abstract class MessageRepositoryTestCase extends TestCase
     {
         parent::setUp();
         $this->aggregateRootId = $this->aggregateRootId();
-        $this->aggregateRootIdType = (new DotSeparatedSnakeCaseInflector())->classNameToType(get_class($this->aggregateRootId));
     }
 
-    protected function createMessage(string $value): Message
+    protected function createMessage(string $value, AggregateRootId $id = null): Message
     {
+        $id ??= $this->aggregateRootId;
+        $type = (new DotSeparatedSnakeCaseInflector())->classNameToType(get_class($id));
+
         return (new DefaultHeadersDecorator())
             ->decorate(new Message(new DummyEvent($value)))
-            ->withHeader(Header::AGGREGATE_ROOT_ID, $this->aggregateRootId)
-            ->withHeader(Header::AGGREGATE_ROOT_ID_TYPE, $this->aggregateRootIdType);
+            ->withHeader(Header::AGGREGATE_ROOT_ID, $id)
+            ->withHeader(Header::AGGREGATE_ROOT_ID_TYPE, $type);
     }
 
     /**
@@ -124,7 +125,8 @@ abstract class MessageRepositoryTestCase extends TestCase
         $messages = [];
 
         for ($i = 0; $i < 10; $i++) {
-            $messages[] = $this->createMessage('numnber: ' . $i)->withHeader(Header::AGGREGATE_ROOT_VERSION, $i)
+            $messages[] = $this->createMessage('number: ' . $i, $this->aggregateRootId())
+                ->withHeader(Header::AGGREGATE_ROOT_VERSION, 11 - $i)
                 ->withHeader(Header::EVENT_ID, Uuid::uuid4()->toString());
         }
 
