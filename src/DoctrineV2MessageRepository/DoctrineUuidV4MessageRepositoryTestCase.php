@@ -34,8 +34,6 @@ abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepository
         $this->connection->executeQuery('TRUNCATE TABLE `' . $this->tableName . '`');
     }
 
-    abstract protected function messageRepository(): DoctrineUuidV4MessageRepository;
-
     protected function aggregateRootId(): AggregateRootId
     {
         return DummyAggregateRootId::generate();

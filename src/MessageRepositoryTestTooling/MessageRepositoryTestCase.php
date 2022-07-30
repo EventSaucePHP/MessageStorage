@@ -195,4 +195,17 @@ abstract class MessageRepositoryTestCase extends TestCase
 
         $repository->retrieveAllAfterVersion($this->aggregateRootId, 5);
     }
+
+    /**
+     * @test
+     */
+    public function failing_to_paginate(): void
+    {
+        $this->tableName = 'invalid';
+        $repository = $this->messageRepository();
+
+        self::expectException(UnableToRetrieveMessages::class);
+
+        iterator_to_array($repository->paginate(10));
+    }
 }

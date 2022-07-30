@@ -174,9 +174,13 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
         $builder->setMaxResults($perPage);
         $builder->setFirstResult($offset);
 
-        foreach ($builder->executeQuery()->iterateColumn() as $payload) {
-            $offset++;
-            yield $this->serializer->unserializePayload(json_decode($payload, true));
+        try {
+            foreach ($builder->executeQuery()->iterateColumn() as $payload) {
+                $offset++;
+                yield $this->serializer->unserializePayload(json_decode($payload, true));
+            }
+        } catch (Throwable $exception) {
+            throw UnableToRetrieveMessages::dueTo($exception->getMessage(), $exception);
         }
 
         return new PaginationCursor(['offset' => $offset]);
