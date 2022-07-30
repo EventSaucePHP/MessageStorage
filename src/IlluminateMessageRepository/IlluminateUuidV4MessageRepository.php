@@ -124,7 +124,7 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
         $builder = $this->connection->table($this->tableName)
             ->limit($perPage)
             ->offset($offset)
-            ->orderBy($this->tableSchema->versionColumn(), 'ASC');
+            ->orderBy($this->tableSchema->incrementalIdColumn(), 'ASC');
 
         try {
             $result = $builder->get(['payload']);
