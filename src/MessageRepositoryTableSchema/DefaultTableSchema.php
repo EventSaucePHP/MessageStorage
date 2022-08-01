@@ -6,6 +6,11 @@ namespace EventSauce\MessageRepository\TableSchema;
 
 final class DefaultTableSchema implements TableSchema
 {
+    public function incrementalIdColumn(): string
+    {
+        return 'id';
+    }
+
     public function eventIdColumn(): string
     {
         return 'event_id';

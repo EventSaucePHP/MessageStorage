@@ -9,10 +9,8 @@ use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Ramsey\Uuid\Uuid;
 
-use function class_exists;
 use function getenv;
 use function interface_exists;
-use function var_dump;
 
 abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepositoryTestCase
 {
@@ -35,8 +33,6 @@ abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepository
         $this->connection = $connection;
         $this->connection->executeQuery('TRUNCATE TABLE `' . $this->tableName . '`');
     }
-
-    abstract protected function messageRepository(): DoctrineUuidV4MessageRepository;
 
     protected function aggregateRootId(): AggregateRootId
     {

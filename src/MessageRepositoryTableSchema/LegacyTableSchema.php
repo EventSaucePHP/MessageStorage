@@ -13,6 +13,10 @@ use EventSauce\EventSourcing\Header;
  */
 final class LegacyTableSchema implements TableSchema
 {
+    public function incrementalIdColumn(): string
+    {
+        return 'id';
+    }
     public function eventIdColumn(): string
     {
         return 'event_id';

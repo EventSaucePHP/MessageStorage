@@ -6,6 +6,8 @@ namespace EventSauce\MessageRepository\TableSchema;
 
 interface TableSchema
 {
+    public function incrementalIdColumn(): string;
+
     public function eventIdColumn(): string;
 
     public function aggregateRootIdColumn(): string;
