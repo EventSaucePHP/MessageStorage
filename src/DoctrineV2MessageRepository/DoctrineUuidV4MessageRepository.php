@@ -9,6 +9,7 @@ use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageRepository;
+use EventSauce\EventSourcing\OffsetCursor;
 use EventSauce\EventSourcing\PaginationCursor;
 use EventSauce\EventSourcing\Serialization\MessageSerializer;
 use EventSauce\EventSourcing\UnableToPersistMessages;
@@ -18,6 +19,7 @@ use EventSauce\MessageRepository\TableSchema\TableSchema;
 use EventSauce\UuidEncoding\BinaryUuidEncoder;
 use EventSauce\UuidEncoding\UuidEncoder;
 use Generator;
+use LogicException;
 use Ramsey\Uuid\Uuid;
 use Throwable;
 
@@ -27,6 +29,7 @@ use function array_keys;
 use function array_map;
 use function array_merge;
 use function count;
+use function get_class;
 use function implode;
 use function json_decode;
 use function json_encode;
@@ -173,9 +176,13 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
             : 0;
     }
 
-    public function paginate(int $perPage, ?PaginationCursor $cursor = null): Generator
+    public function paginate(int $perPage, PaginationCursor $cursor): Generator
     {
-        $offset = $cursor?->intParam('offset') ?: 0;
+        if ( ! $cursor instanceof OffsetCursor) {
+            throw new LogicException(sprintf('Wrong cursor type used, expected %s, received %s', OffsetCursor::class, get_class($cursor)));
+        }
+
+        $offset = $cursor->offset();
         $builder = $this->connection->createQueryBuilder();
         $builder->select($this->tableSchema->payloadColumn());
         $builder->from($this->tableName);
@@ -194,6 +201,6 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
             throw UnableToRetrieveMessages::dueTo($exception->getMessage(), $exception);
         }
 
-        return new PaginationCursor(['offset' => $offset]);
+        return OffsetCursor::withOffset($offset);
     }
 }

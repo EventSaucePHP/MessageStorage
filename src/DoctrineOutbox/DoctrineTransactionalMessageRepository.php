@@ -48,7 +48,7 @@ class DoctrineTransactionalMessageRepository implements MessageRepository
         return $this->messageRepository->retrieveAllAfterVersion($id, $aggregateRootVersion);
     }
 
-    public function paginate(int $perPage, ?PaginationCursor $cursor = null): Generator
+    public function paginate(int $perPage, PaginationCursor $cursor): Generator
     {
         return $this->messageRepository->paginate($perPage, $cursor);
     }

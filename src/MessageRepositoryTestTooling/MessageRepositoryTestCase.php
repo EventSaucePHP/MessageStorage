@@ -8,6 +8,7 @@ use EventSauce\EventSourcing\DotSeparatedSnakeCaseInflector;
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageRepository;
+use EventSauce\EventSourcing\OffsetCursor;
 use EventSauce\EventSourcing\PaginationCursor;
 use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\EventSourcing\UnableToRetrieveMessages;
@@ -107,7 +108,7 @@ abstract class MessageRepositoryTestCase extends TestCase
 
         $repository->persist(...$messages);
 
-        $page = $repository->paginate(4);
+        $page = $repository->paginate(4, OffsetCursor::fromStart());
         $messagesFromPage = iterator_to_array($page, false);
         $expectedMessages = array_slice($messages, 0, 4);
         $cursor = $page->getReturn();
@@ -131,7 +132,7 @@ abstract class MessageRepositoryTestCase extends TestCase
         }
 
         $repository->persist(...$messages);
-        $page = $repository->paginate(4);
+        $page = $repository->paginate(4, OffsetCursor::fromStart());
         iterator_to_array($page, false);
         $cursor = $page->getReturn();
 
@@ -206,6 +207,6 @@ abstract class MessageRepositoryTestCase extends TestCase
 
         self::expectException(UnableToRetrieveMessages::class);
 
-        iterator_to_array($repository->paginate(10));
+        iterator_to_array($repository->paginate(10, OffsetCursor::fromStart()));
     }
 }
