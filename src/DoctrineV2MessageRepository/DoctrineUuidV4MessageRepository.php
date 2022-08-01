@@ -33,14 +33,14 @@ use function sprintf;
 
 class DoctrineUuidV4MessageRepository implements MessageRepository
 {
-    private TableSchema $tableSchema;
-    private UuidEncoder $uuidEncoder;
+    protected TableSchema $tableSchema;
+    protected UuidEncoder $uuidEncoder;
 
     public function __construct(
-        private Connection $connection,
-        private string $tableName,
-        private MessageSerializer $serializer,
-        private int $jsonEncodeOptions = 0,
+        protected Connection $connection,
+        protected string $tableName,
+        protected MessageSerializer $serializer,
+        protected int $jsonEncodeOptions = 0,
         ?TableSchema $tableSchema = null,
         ?UuidEncoder $uuidEncoder = null,
     ) {
@@ -161,7 +161,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
     /**
      * @psalm-return Generator<Message>
      */
-    private function yieldMessagesFromPayloads(Traversable $payloads): Generator
+    protected function yieldMessagesFromPayloads(Traversable $payloads): Generator
     {
         foreach ($payloads as $payload) {
             yield $message = $this->serializer->unserializePayload(json_decode($payload['payload'], true));
