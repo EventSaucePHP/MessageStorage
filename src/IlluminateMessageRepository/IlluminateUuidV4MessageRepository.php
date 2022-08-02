@@ -122,7 +122,7 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
         return isset($message) ? $message->header(Header::AGGREGATE_ROOT_VERSION) ?: 0 : 0;
     }
 
-    public function paginate(int $perPage, PaginationCursor $cursor): Generator
+    public function paginate(PaginationCursor $cursor): Generator
     {
         if ( ! $cursor instanceof OffsetCursor) {
             throw new LogicException(sprintf('Wrong cursor type used, expected %s, received %s', OffsetCursor::class, get_class($cursor)));
@@ -130,7 +130,7 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
 
         $offset = $cursor->offset();
         $builder = $this->connection->table($this->tableName)
-            ->limit($perPage)
+            ->limit($cursor->limit())
             ->offset($offset)
             ->orderBy($this->tableSchema->incrementalIdColumn(), 'ASC');
 
@@ -142,7 +142,7 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
                 yield $this->serializer->unserializePayload(json_decode($row->payload, true));
             }
 
-            return OffsetCursor::withOffset($offset);
+            return $cursor->withOffset($offset);
         } catch (Throwable $exception) {
             throw UnableToRetrieveMessages::dueTo('', $exception);
         }

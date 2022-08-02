@@ -108,7 +108,7 @@ abstract class MessageRepositoryTestCase extends TestCase
 
         $repository->persist(...$messages);
 
-        $page = $repository->paginate(4, OffsetCursor::fromStart());
+        $page = $repository->paginate(OffsetCursor::fromStart(limit: 4));
         $messagesFromPage = iterator_to_array($page, false);
         $expectedMessages = array_slice($messages, 0, 4);
         $cursor = $page->getReturn();
@@ -132,11 +132,11 @@ abstract class MessageRepositoryTestCase extends TestCase
         }
 
         $repository->persist(...$messages);
-        $page = $repository->paginate(4, OffsetCursor::fromStart());
+        $page = $repository->paginate(OffsetCursor::fromStart(limit: 4));
         iterator_to_array($page, false);
         $cursor = $page->getReturn();
 
-        $page = $repository->paginate(4, $cursor);
+        $page = $repository->paginate($cursor);
         $messagesFromPage = iterator_to_array($page, false);
         $expectedMessages = array_slice($messages, 4, 4);
 
@@ -207,6 +207,6 @@ abstract class MessageRepositoryTestCase extends TestCase
 
         self::expectException(UnableToRetrieveMessages::class);
 
-        iterator_to_array($repository->paginate(10, OffsetCursor::fromStart()));
+        iterator_to_array($repository->paginate(OffsetCursor::fromStart(limit: 10)));
     }
 }

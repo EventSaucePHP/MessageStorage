@@ -49,8 +49,8 @@ class IlluminateTransactionalMessageRepository implements MessageRepository
         return $this->messageRepository->retrieveAllAfterVersion($id, $aggregateRootVersion);
     }
 
-    public function paginate(int $perPage, PaginationCursor $cursor): Generator
+    public function paginate(PaginationCursor $cursor): Generator
     {
-        return $this->messageRepository->paginate($perPage, $cursor);
+        return $this->messageRepository->paginate($cursor);
     }
 }

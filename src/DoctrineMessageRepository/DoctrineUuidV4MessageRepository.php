@@ -167,29 +167,29 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
             : 0;
     }
 
-    public function paginate(int $perPage, PaginationCursor $cursor): Generator
+    public function paginate(PaginationCursor $cursor): Generator
     {
         if ( ! $cursor instanceof OffsetCursor) {
             throw new LogicException(sprintf('Wrong cursor type used, expected %s, received %s', OffsetCursor::class, get_class($cursor)));
         }
 
-        $offset = $cursor->offset();
+        $numberOfMessages = 0;
         $builder = $this->connection->createQueryBuilder();
         $builder->select($this->tableSchema->payloadColumn());
         $builder->from($this->tableName);
         $builder->orderBy($this->tableSchema->incrementalIdColumn(), 'ASC');
-        $builder->setMaxResults($perPage);
-        $builder->setFirstResult($offset);
+        $builder->setMaxResults($cursor->limit());
+        $builder->setFirstResult($cursor->offset());
 
         try {
             foreach ($builder->executeQuery()->iterateColumn() as $payload) {
-                $offset++;
+                $numberOfMessages++;
                 yield $this->serializer->unserializePayload(json_decode($payload, true));
             }
         } catch (Throwable $exception) {
             throw UnableToRetrieveMessages::dueTo($exception->getMessage(), $exception);
         }
 
-        return OffsetCursor::withOffset($offset);
+        return $cursor->plusOffset($numberOfMessages);
     }
 }
