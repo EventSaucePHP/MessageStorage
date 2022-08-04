@@ -129,10 +129,11 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
         }
 
         $offset = $cursor->offset();
+        $incrementalIdColumn = $this->tableSchema->incrementalIdColumn();
         $builder = $this->connection->table($this->tableName)
             ->limit($cursor->limit())
-            ->where($this->tableSchema->incrementalIdColumn(), '>', $cursor->offset())
-            ->orderBy($this->tableSchema->incrementalIdColumn(), 'ASC');
+            ->where($incrementalIdColumn, '>', $cursor->offset())
+            ->orderBy($incrementalIdColumn, 'ASC');
 
         try {
             $result = $builder->get(['payload']);

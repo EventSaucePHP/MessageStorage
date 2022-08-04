@@ -177,9 +177,10 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
         $builder = $this->connection->createQueryBuilder();
         $builder->select($this->tableSchema->payloadColumn());
         $builder->from($this->tableName);
-        $builder->orderBy($this->tableSchema->incrementalIdColumn(), 'ASC');
+        $incrementalIdColumn = $this->tableSchema->incrementalIdColumn();
+        $builder->orderBy($incrementalIdColumn, 'ASC');
         $builder->setMaxResults($cursor->limit());
-        $builder->where($this->tableSchema->incrementalIdColumn() . ' > :id');
+        $builder->where($incrementalIdColumn . ' > :id');
         $builder->setParameter('id', $cursor->offset());
 
         try {
