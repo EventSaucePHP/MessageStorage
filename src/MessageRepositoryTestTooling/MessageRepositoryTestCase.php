@@ -102,7 +102,7 @@ abstract class MessageRepositoryTestCase extends TestCase
         $messages = [];
 
         for ($i = 0; $i < 10; $i++) {
-            $messages[] = $this->createMessage('numnber: ' . $i)->withHeader(Header::AGGREGATE_ROOT_VERSION, $i)
+            $messages[] = $this->createMessage('number: ' . $i)->withHeader(Header::AGGREGATE_ROOT_VERSION, $i)
                 ->withHeader(Header::EVENT_ID, Uuid::uuid4()->toString());
         }
 
