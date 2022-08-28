@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "eventsauce/eventsauce": "dev-develop/3.0",
+        "eventsauce/eventsauce": "^3.0",
         "eventsauce/backoff": "^1.0",
         "doctrine/dbal": "^2.11|^3.1"
     },
