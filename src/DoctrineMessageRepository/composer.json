@@ -11,8 +11,8 @@
     "require": {
         "doctrine/dbal": "^3.1",
         "eventsauce/eventsauce": "^1.0||^2.0||^3.0",
-        "eventsauce/message-repository-table-schema": "^0.2||^0.3",
-        "eventsauce/uuid-encoding": "^0.2||^0.3",
+        "eventsauce/message-repository-table-schema": "^0.2||^0.3||^0.4",
+        "eventsauce/uuid-encoding": "^0.2||^0.3||^0.4",
         "ramsey/uuid": "^4.1"
     },
     "autoload": {
