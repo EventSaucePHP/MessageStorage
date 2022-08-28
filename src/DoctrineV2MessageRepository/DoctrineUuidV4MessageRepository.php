@@ -4,6 +4,7 @@ namespace EventSauce\MessageRepository\DoctrineV2MessageRepository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
+use Doctrine\DBAL\ForwardCompatibility\Result;
 use Doctrine\DBAL\Query\QueryBuilder;
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\Header;
@@ -193,6 +194,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
         $builder->setParameter('id', $cursor->offset());
 
         try {
+            /** @var Result $result */
             $result = $builder->execute();
 
             foreach ($result as $payload) {
