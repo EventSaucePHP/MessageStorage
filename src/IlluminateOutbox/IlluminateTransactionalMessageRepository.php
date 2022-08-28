@@ -5,6 +5,7 @@ namespace EventSauce\MessageOutbox\IlluminateOutbox;
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageRepository;
+use EventSauce\EventSourcing\PaginationCursor;
 use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\MessageOutbox\OutboxRepository;
 use Generator;
@@ -46,5 +47,10 @@ class IlluminateTransactionalMessageRepository implements MessageRepository
     public function retrieveAllAfterVersion(AggregateRootId $id, int $aggregateRootVersion): Generator
     {
         return $this->messageRepository->retrieveAllAfterVersion($id, $aggregateRootVersion);
+    }
+
+    public function paginate(PaginationCursor $cursor): Generator
+    {
+        return $this->messageRepository->paginate($cursor);
     }
 }
