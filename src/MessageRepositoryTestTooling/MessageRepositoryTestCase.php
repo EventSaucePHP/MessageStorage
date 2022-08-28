@@ -127,6 +127,10 @@ abstract class MessageRepositoryTestCase extends TestCase
      */
     public function fetching_the_next_page_for_pagination(): void
     {
+        if ( ! class_exists(OffsetCursor::class, true)) {
+            self::markTestSkipped('Only run on 3.0 and up');
+        }
+
         $repository = $this->messageRepository();
         $messages = [];
 
