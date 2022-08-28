@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
 use function array_slice;
+use function class_exists;
 use function get_class;
 use function iterator_to_array;
 
@@ -98,6 +99,10 @@ abstract class MessageRepositoryTestCase extends TestCase
      */
     public function fetching_the_first_page_for_pagination(): void
     {
+        if ( ! class_exists(OffsetCursor::class, true)) {
+            self::markTestSkipped('Only run on 3.0 and up');
+        }
+
         $repository = $this->messageRepository();
         $messages = [];
 
@@ -202,6 +207,10 @@ abstract class MessageRepositoryTestCase extends TestCase
      */
     public function failing_to_paginate(): void
     {
+        if ( ! class_exists(OffsetCursor::class, true)) {
+            self::markTestSkipped('Only run on 3.0 and up');
+        }
+
         $this->tableName = 'invalid';
         $repository = $this->messageRepository();
 
