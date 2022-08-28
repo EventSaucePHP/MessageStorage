@@ -56,8 +56,8 @@ The test suite includes tests for two major versions of
 Doctrine (2 and 3) that are not compatible with each other
 and cannot be installed at the same time.
 
-This means we can test all implementations together with
-the exception of the Doctrine 2 implementation.
+This means we can test all implementations together except
+for the Doctrine 2 implementation.
 
 Running all tests except for the Doctrine 2 tests can
 be accomplished by excluding tests in the **doctrine2**
