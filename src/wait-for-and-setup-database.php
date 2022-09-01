@@ -55,15 +55,14 @@ SQL
 $connection->getSchemaBuilder()->dropIfExists('domain_messages_uuid');
 $connection->statement(<<<SQL
 CREATE TABLE IF NOT EXISTS `domain_messages_uuid` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `event_id` BINARY(16) NOT NULL,
-  `aggregate_root_id` BINARY(16) NOT NULL,
-  `version` int(20) unsigned NULL,
-  `payload` varchar(16001) NOT NULL,
-  PRIMARY KEY (`event_id`),
-  KEY (`aggregate_root_id`),
-  KEY `pagination` (`id` ASC),
-  KEY `reconstitution` (`aggregate_root_id`, `version` ASC)
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+    `event_id` BINARY(16) NOT NULL,
+    `aggregate_root_id` BINARY(16) NOT NULL,
+    `version` int(20) unsigned NULL,
+    `payload` varchar(16001) NOT NULL,
+    PRIMARY KEY (`id` ASC),
+    KEY (`aggregate_root_id`),
+    KEY `reconstitution` (`aggregate_root_id`, `version` ASC)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB;
 SQL
 );
@@ -71,7 +70,7 @@ SQL
 $connection->statement("DROP TABLE IF EXISTS legacy_domain_messages_uuid");
 $connection->statement("
 CREATE TABLE IF NOT EXISTS legacy_domain_messages_uuid (
-    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+    id bigint unsigned NOT NULL AUTO_INCREMENT,
     event_id VARCHAR(36) NOT NULL,
     event_type VARCHAR(100) NOT NULL,
     aggregate_root_id VARCHAR(36) NOT NULL,
@@ -80,6 +79,6 @@ CREATE TABLE IF NOT EXISTS legacy_domain_messages_uuid (
     payload JSON NOT NULL,
     INDEX aggregate_root_id (aggregate_root_id),
     UNIQUE KEY unique_id_and_version (aggregate_root_id, aggregate_root_version ASC),
-    KEY `pagination` (`id` ASC)
+    PRIMARY KEY `pagination` (`id` ASC)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ENGINE=InnoDB
 ");
