@@ -31,6 +31,7 @@ use function implode;
 use function json_decode;
 use function json_encode;
 use function sprintf;
+use function var_dump;
 
 class DoctrineUuidV4MessageRepository implements MessageRepository
 {

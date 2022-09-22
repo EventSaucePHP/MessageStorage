@@ -10,6 +10,8 @@ use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Ramsey\Uuid\Uuid;
 
 use function class_exists;
+use function getenv;
+use function str_starts_with;
 
 abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepositoryTestCase
 {
@@ -22,15 +24,27 @@ abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepository
         }
 
         parent::setUp();
+        $connection = DriverManager::getConnection(['url' => $this->formatDsn()]);
+        $this->connection = $connection;
+        $this->truncateTable();
+    }
+
+    protected function formatDsn(): string
+    {
         $host = getenv('EVENTSAUCE_TESTING_MYSQL_HOST') ?: '127.0.0.1';
         $port = getenv('EVENTSAUCE_TESTING_MYSQL_PORT') ?: '3306';
-        $connection = DriverManager::getConnection(
-            [
-                'url' => "mysql://username:password@$host:$port/outbox_messages",
-            ]
-        );
-        $this->connection = $connection;
-        $this->connection->executeQuery('TRUNCATE TABLE ' . $this->tableName);
+        $dsn = "mysql://username:password@$host:$port/outbox_messages";
+
+        return $dsn;
+    }
+
+    protected function truncateTable(): void
+    {
+        if (str_starts_with($this->formatDsn(), 'mysql')) {
+            $this->connection->executeQuery('TRUNCATE TABLE ' . $this->tableName);
+        } else {
+            $this->connection->executeQuery('TRUNCATE TABLE ' . $this->tableName . ' RESTART IDENTITY CASCADE');
+        }
     }
 
     abstract protected function messageRepository(): DoctrineUuidV4MessageRepository;
@@ -44,4 +58,5 @@ abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepository
     {
         return Uuid::uuid4()->toString();
     }
+
 }

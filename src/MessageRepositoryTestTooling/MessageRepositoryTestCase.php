@@ -21,6 +21,7 @@ use function array_slice;
 use function class_exists;
 use function get_class;
 use function iterator_to_array;
+use function var_dump;
 
 abstract class MessageRepositoryTestCase extends TestCase
 {
@@ -127,7 +128,7 @@ abstract class MessageRepositoryTestCase extends TestCase
      */
     public function fetching_the_next_page_for_pagination(): void
     {
-        if ( ! class_exists(OffsetCursor::class, true)) {
+        if ( ! class_exists(OffsetCursor::class)) {
             self::markTestSkipped('Only run on 3.0 and up');
         }
 

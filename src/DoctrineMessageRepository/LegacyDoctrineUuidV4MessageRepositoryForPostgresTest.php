@@ -8,7 +8,7 @@ use EventSauce\UuidEncoding\StringUuidEncoder;
 
 use function getenv;
 
-class LegacyDoctrineUuidV4MessageRepositoryTest extends DoctrineUuidV4MessageRepositoryTestCase
+class LegacyDoctrineUuidV4MessageRepositoryForPostgresTest extends DoctrineUuidV4MessageRepositoryTestCase
 {
     protected string $tableName = 'legacy_domain_messages_uuid';
 
@@ -25,9 +25,9 @@ class LegacyDoctrineUuidV4MessageRepositoryTest extends DoctrineUuidV4MessageRep
 
     protected function formatDsn(): string
     {
-        $host = getenv('EVENTSAUCE_TESTING_MYSQL_HOST') ?: '127.0.0.1';
-        $port = getenv('EVENTSAUCE_TESTING_MYSQL_PORT') ?: '3306';
+        $host = getenv('EVENTSAUCE_TESTING_PGSQL_HOST') ?: '127.0.0.1';
+        $port = getenv('EVENTSAUCE_TESTING_PGSQL_PORT') ?: '5432';
 
-        return "mysql://username:password@$host:$port/outbox_messages";
+        return "pgsql://username:password@$host:$port/outbox_messages";
     }
 }
