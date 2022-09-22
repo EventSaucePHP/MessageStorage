@@ -23,15 +23,11 @@ abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepository
         }
 
         parent::setUp();
-        $host = getenv('EVENTSAUCE_TESTING_MYSQL_HOST') ?: '127.0.0.1';
-        $port = getenv('EVENTSAUCE_TESTING_MYSQL_PORT') ?: '3306';
-        $connection = DriverManager::getConnection(
-            [
-                'url' => "mysql://username:password@$host:$port/outbox_messages",
-            ]
-        );
+        $dsn = $this->formatDsn();
+
+        $connection = DriverManager::getConnection(['url' => $dsn]);
         $this->connection = $connection;
-        $this->connection->executeQuery('TRUNCATE TABLE `' . $this->tableName . '`');
+        $this->connection->executeQuery('TRUNCATE TABLE ' . $this->tableName);
     }
 
     protected function aggregateRootId(): AggregateRootId
@@ -42,5 +38,14 @@ abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepository
     protected function eventId(): string
     {
         return Uuid::uuid4()->toString();
+    }
+
+    protected function formatDsn(): string
+    {
+        $host = getenv('EVENTSAUCE_TESTING_MYSQL_HOST') ?: '127.0.0.1';
+        $port = getenv('EVENTSAUCE_TESTING_MYSQL_PORT') ?: '3306';
+        $dsn = "mysql://username:password@$host:$port/outbox_messages";
+
+        return $dsn;
     }
 }

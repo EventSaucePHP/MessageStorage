@@ -35,7 +35,7 @@ class DoctrineOutboxRepositoryTest extends OutboxRepositoryTestCase
                 'driver' => 'pdo_mysql',
             ]
         );
-        $this->connection->executeQuery('TRUNCATE TABLE `outbox_messages`');
+        $this->connection->executeQuery('TRUNCATE TABLE outbox_messages');
     }
 
     protected function outboxMessageRepository(): DoctrineOutboxRepository

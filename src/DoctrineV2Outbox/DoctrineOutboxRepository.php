@@ -30,7 +30,7 @@ class DoctrineOutboxRepository implements OutboxRepository
             return;
         }
 
-        $sqlQuery = "INSERT INTO {$this->tableName} (`payload`) VALUES " .  implode(', ', array_fill(0, $numberOfMessages, '(?)')) ;
+        $sqlQuery = "INSERT INTO {$this->tableName} (payload) VALUES " .  implode(', ', array_fill(0, $numberOfMessages, '(?)')) ;
         $statement = $this->connection->prepare($sqlQuery);
         $index = 0;
 
@@ -43,7 +43,7 @@ class DoctrineOutboxRepository implements OutboxRepository
 
     public function retrieveBatch(int $batchSize): Traversable
     {
-        $sqlQuery = "SELECT `id`, `payload` FROM `{$this->tableName}` WHERE `consumed` = FALSE ORDER BY `id` ASC LIMIT ? ";
+        $sqlQuery = "SELECT id, payload FROM {$this->tableName} WHERE consumed = FALSE ORDER BY `id` ASC LIMIT ? ";
         $statement = $this->connection->prepare($sqlQuery);
         $statement->bindValue(1, $batchSize, ParameterType::INTEGER);
         $statement->execute();
@@ -66,7 +66,7 @@ class DoctrineOutboxRepository implements OutboxRepository
             $messages,
         );
 
-        $sqlStatement = "UPDATE `{$this->tableName}` SET consumed = TRUE WHERE `id` IN (:ids)";
+        $sqlStatement = "UPDATE {$this->tableName} SET consumed = TRUE WHERE id IN (:ids)";
         $this->connection->executeQuery($sqlStatement, [
             'ids' => $ids,
         ], [
@@ -85,7 +85,7 @@ class DoctrineOutboxRepository implements OutboxRepository
             $messages,
         );
 
-        $sqlStatement = "DELETE FROM `{$this->tableName}` WHERE `id` IN (:ids)";
+        $sqlStatement = "DELETE FROM {$this->tableName} WHERE id IN (:ids)";
         $this->connection->executeQuery($sqlStatement, [
             'ids' => $ids,
         ], [

@@ -37,8 +37,8 @@ class DoctrineTransactionalMessageRepositoryTest extends TransactionalMessageRep
                 'url' => "mysql://username:password@$host:$port/outbox_messages",
             ]
         );
-        $this->connection->executeQuery('TRUNCATE TABLE `'.$this->repositoryTable.'`');
-        $this->connection->executeQuery('TRUNCATE TABLE `'.$this->outboxTable.'`');
+        $this->connection->executeQuery('TRUNCATE TABLE '.$this->repositoryTable);
+        $this->connection->executeQuery('TRUNCATE TABLE '.$this->outboxTable);
     }
 
     protected function messageRepository(): MessageRepository
