@@ -20,6 +20,7 @@ use EventSauce\UuidEncoding\UuidEncoder;
 use Generator;
 use LogicException;
 use Ramsey\Uuid\Uuid;
+use RuntimeException;
 use Throwable;
 
 use function array_keys;
@@ -120,7 +121,12 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
         $builder->setParameter('aggregate_root_id', $this->uuidEncoder->encodeString($id->toString()));
 
         try {
-            return $this->yieldMessagesFromPayloads($builder->executeQuery()->iterateColumn());
+            $doctrineResult = $builder->executeQuery();
+            if ($doctrineResult->rowCount() === 0) {
+                throw new RuntimeException("Aggregate with ID '{$id->toString()}' not found.");
+            }
+
+            return $this->yieldMessagesFromPayloads($doctrineResult->iterateColumn());
         } catch (Throwable $exception) {
             throw UnableToRetrieveMessages::dueTo('', $exception);
         }
