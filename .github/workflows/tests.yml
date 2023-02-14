@@ -86,6 +86,14 @@ jobs:
       - name: Execute illuminate tests
         run: vendor/bin/phpunit --group=illuminate
 
+      - name: Install illuminate/database 10
+        if: ${{ matrix.php >= 8.1 }}
+        run: composer require illuminate/database:^10.0 --${{ matrix.stability }} -w --prefer-dist --no-interaction --no-progress
+
+      - name: Execute illuminate tests
+        if: ${{ matrix.php >= 8.1 }}
+        run: vendor/bin/phpunit --group=illuminate
+
       - name: Run PHPStan
         if: ${{ matrix.eventsauce == '3.0' }}
         run: vendor/bin/phpstan analyze -c phpstan.doctrine2.neon
