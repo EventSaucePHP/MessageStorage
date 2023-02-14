@@ -88,7 +88,9 @@ jobs:
 
       - name: Install illuminate/database 10
         if: ${{ matrix.php >= 8.1 }}
-        run: composer require illuminate/database:^10.0 --${{ matrix.stability }} -w --prefer-dist --no-interaction --no-progress
+        run: |
+          composer require illuminate/database:^10.0 --${{ matrix.stability }} -w --prefer-dist --no-interaction --no-progress --no-update
+          composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
       - name: Execute illuminate tests
         if: ${{ matrix.php >= 8.1 }}
