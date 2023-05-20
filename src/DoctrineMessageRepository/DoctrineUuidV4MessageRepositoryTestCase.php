@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\DriverManager;
 use EventSauce\EventSourcing\AggregateRootId;
+use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Ramsey\Uuid\Uuid;
 
@@ -46,8 +47,6 @@ abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepository
             $this->connection->executeQuery('TRUNCATE TABLE ' . $this->tableName . ' RESTART IDENTITY CASCADE');
         }
     }
-
-    abstract protected function messageRepository(): DoctrineUuidV4MessageRepository;
 
     protected function aggregateRootId(): AggregateRootId
     {

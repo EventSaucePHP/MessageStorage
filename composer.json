@@ -21,6 +21,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "EventSauce\\IdEncoding\\": "src/IdEncoding",
             "EventSauce\\UuidEncoding\\": "src/UuidEncoding",
             "EventSauce\\MessageOutbox\\TestTooling\\": "src/TestTooling",
             "EventSauce\\MessageOutbox\\": "src/MessageOutbox",

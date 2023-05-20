@@ -21,7 +21,6 @@ use function array_slice;
 use function class_exists;
 use function get_class;
 use function iterator_to_array;
-use function var_dump;
 
 abstract class MessageRepositoryTestCase extends TestCase
 {

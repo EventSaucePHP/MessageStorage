@@ -4,6 +4,8 @@ namespace EventSauce\MessageRepository\DoctrineMessageRepository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use EventSauce\IdEncoding\BinaryUuidIdEncoder;
+use EventSauce\IdEncoding\IdEncoder;
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
@@ -15,13 +17,10 @@ use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\EventSourcing\UnableToRetrieveMessages;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
 use EventSauce\MessageRepository\TableSchema\TableSchema;
-use EventSauce\UuidEncoding\BinaryUuidEncoder;
-use EventSauce\UuidEncoding\UuidEncoder;
 use Generator;
 use LogicException;
 use Ramsey\Uuid\Uuid;
 use Throwable;
-
 use function array_keys;
 use function array_map;
 use function array_merge;
@@ -32,10 +31,11 @@ use function json_decode;
 use function json_encode;
 use function sprintf;
 
-class DoctrineUuidV4MessageRepository implements MessageRepository
+class DoctrineMessageRepository implements MessageRepository
 {
     private TableSchema $tableSchema;
-    private UuidEncoder $uuidEncoder;
+    private IdEncoder $aggregateIdEncoder;
+    private IdEncoder $eventIdEncoder;
 
     public function __construct(
         private Connection $connection,
@@ -43,10 +43,13 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
         private MessageSerializer $serializer,
         private int $jsonEncodeOptions = 0,
         ?TableSchema $tableSchema = null,
-        ?UuidEncoder $uuidEncoder = null,
-    ) {
+        ?IdEncoder $aggregateRootIdEncoder = null,
+        ?IdEncoder $eventIdEncoder = null,
+    )
+    {
         $this->tableSchema = $tableSchema ?? new DefaultTableSchema();
-        $this->uuidEncoder = $uuidEncoder ?? new BinaryUuidEncoder();
+        $this->aggregateIdEncoder = $aggregateRootIdEncoder ?? new BinaryUuidIdEncoder();
+        $this->eventIdEncoder = $eventIdEncoder ?? $this->aggregateIdEncoder;
     }
 
     public function persist(Message ...$messages): void
@@ -71,8 +74,8 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
             $payload['headers'][Header::EVENT_ID] ??= Uuid::uuid4()->toString();
 
             $messageParameters = [
-                $this->indexParameter('event_id', $index) => $this->uuidEncoder->encodeString($payload['headers'][Header::EVENT_ID]),
-                $this->indexParameter('aggregate_root_id', $index) => $this->uuidEncoder->encodeString($payload['headers'][Header::AGGREGATE_ROOT_ID]),
+                $this->indexParameter('event_id', $index) => $this->eventIdEncoder->encodeId($payload['headers'][Header::EVENT_ID]),
+                $this->indexParameter('aggregate_root_id', $index) => $this->aggregateIdEncoder->encodeId($message->aggregateRootId()),
                 $this->indexParameter('version', $index) => $payload['headers'][Header::AGGREGATE_ROOT_VERSION] ?? 0,
                 $this->indexParameter('payload', $index) => json_encode($payload, $this->jsonEncodeOptions),
             ];
@@ -109,14 +112,14 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
 
     private function formatNamedParameters(array $parameters): array
     {
-        return array_map(static fn (string $name) => ':' . $name, $parameters);
+        return array_map(static fn(string $name) => ':' . $name, $parameters);
     }
 
     public function retrieveAll(AggregateRootId $id): Generator
     {
         $builder = $this->createQueryBuilder();
         $builder->where(sprintf('%s = :aggregate_root_id', $this->tableSchema->aggregateRootIdColumn()));
-        $builder->setParameter('aggregate_root_id', $this->uuidEncoder->encodeString($id->toString()));
+        $builder->setParameter('aggregate_root_id', $this->aggregateIdEncoder->encodeId($id));
 
         try {
             return $this->yieldMessagesFromPayloads($builder->executeQuery()->iterateColumn());
@@ -133,7 +136,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
         $builder = $this->createQueryBuilder();
         $builder->where(sprintf('%s = :aggregate_root_id', $this->tableSchema->aggregateRootIdColumn()));
         $builder->andWhere(sprintf('%s > :version', $this->tableSchema->versionColumn()));
-        $builder->setParameter('aggregate_root_id', $this->uuidEncoder->encodeString($id->toString()));
+        $builder->setParameter('aggregate_root_id', $this->aggregateIdEncoder->encodeId($id));
         $builder->setParameter('version', $aggregateRootVersion);
 
         try {
@@ -169,7 +172,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
 
     public function paginate(PaginationCursor $cursor): Generator
     {
-        if ( ! $cursor instanceof OffsetCursor) {
+        if (!$cursor instanceof OffsetCursor) {
             throw new LogicException(sprintf('Wrong cursor type used, expected %s, received %s', OffsetCursor::class, get_class($cursor)));
         }
 

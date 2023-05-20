@@ -1,0 +1,19 @@
+{
+    "name": "eventsauce/id-encoding",
+    "description": "ID encoding utility",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Frank de Jonge",
+            "email": "info@frankdejonge.nl"
+        }
+    ],
+    "require": {
+        "ramsey/uuid": "^4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "EventSauce\\IdEncoding\\": "./"
+        }
+    }
+}
