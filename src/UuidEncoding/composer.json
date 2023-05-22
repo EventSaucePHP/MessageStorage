@@ -15,10 +15,5 @@
         "psr-4": {
             "EventSauce\\UuidEncoding\\": "./"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-main": "0.3-dev"
-        }
     }
 }

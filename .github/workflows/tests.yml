@@ -33,7 +33,7 @@ jobs:
       fail-fast: true
       matrix:
         php: [8.0, 8.1, 8.2]
-        eventsauce: ['^1.1', '^2.0', '^3.0']
+        eventsauce: ['^3.0']
         stability: [prefer-lowest, prefer-stable]
 
     name: PHP ${{ matrix.php }} - EventSauce ${{ matrix.eventsauce }} - ${{ matrix.stability }}
@@ -56,10 +56,6 @@ jobs:
       - name: Install specific doctrine version
         run: |
           composer require "doctrine/dbal:^3.1" -w --prefer-dist --no-interaction --no-update
-
-      - name: Install specific illuminate version
-        run: |
-          composer require "illuminate/database:^8.35" -w --prefer-dist --no-interaction --no-update
 
       - name: Install dependencies
         run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress

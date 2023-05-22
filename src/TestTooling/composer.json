@@ -9,19 +9,14 @@
         }
     ],
     "require": {
-        "eventsauce/eventsauce": "^1.0||^2.0||^3.0",
-        "eventsauce/message-outbox": "^0.1||^0.2||^0.3||^0.4",
-        "phpunit/phpunit": "^9.5",
+        "eventsauce/eventsauce": "^3.0",
+        "eventsauce/message-outbox": "^1.0",
+        "phpunit/phpunit": "^9.5||^10.0",
         "ramsey/uuid": "^4.1"
     },
     "autoload": {
         "psr-4": {
             "EventSauce\\MessageOutbox\\TestTooling\\": "./"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-main": "0.3-dev"
         }
     }
 }

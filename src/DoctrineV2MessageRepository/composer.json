@@ -10,9 +10,10 @@
     ],
     "require": {
         "doctrine/dbal": "^2.6",
-        "eventsauce/eventsauce": "^1.0||^2.0||^3.0",
-        "eventsauce/message-repository-table-schema": "^0.2||^0.3||^0.4",
-        "eventsauce/uuid-encoding": "^0.2||^0.3||^0.4",
+        "eventsauce/eventsauce": "^3.0",
+        "eventsauce/message-repository-table-schema": "^1.0",
+        "eventsauce/uuid-encoding": "^1.0",
+        "eventsauce/id-encoding": "^1.0",
         "ramsey/uuid": "^4.1"
     },
     "autoload": {
