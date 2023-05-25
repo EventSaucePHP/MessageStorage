@@ -4,14 +4,14 @@ namespace EventSauce\MessageRepository\DoctrineV2MessageRepository;
 
 use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
-use EventSauce\MessageRepository\DoctrineV2MessageRepository\DoctrineUuidV4MessageRepositoryTestCase;
+use EventSauce\MessageRepository\DoctrineV2MessageRepository\DoctrineMessageRepositoryTestCase;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
 use EventSauce\UuidEncoding\BinaryUuidEncoder;
 
 /**
  * @group doctrine2
  */
-class DefaultDoctrineMessageRepositoryTest extends DoctrineUuidV4MessageRepositoryTestCase
+class DefaultDoctrineMessageRepositoryTest extends DoctrineMessageRepositoryTestCase
 {
     protected string $tableName = 'domain_messages_uuid';
 

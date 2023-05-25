@@ -9,7 +9,7 @@ use EventSauce\UuidEncoding\StringUuidEncoder;
 /**
  * @group doctrine2
  */
-class LegacyDoctrineUuidV4MessageRepositoryTest extends DoctrineUuidV4MessageRepositoryTestCase
+class LegacyDoctrineUuidV4MessageRepositoryTest extends DoctrineMessageRepositoryTestCase
 {
     protected string $tableName = 'legacy_domain_messages_uuid';
 

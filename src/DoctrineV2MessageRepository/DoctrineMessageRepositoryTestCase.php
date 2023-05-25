@@ -12,7 +12,7 @@ use Ramsey\Uuid\Uuid;
 use function getenv;
 use function interface_exists;
 
-abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepositoryTestCase
+abstract class DoctrineMessageRepositoryTestCase extends MessageRepositoryTestCase
 {
     protected Connection $connection;
 
