@@ -37,7 +37,7 @@ use function sprintf;
 class DoctrineMessageRepository implements MessageRepository
 {
     private TableSchema $tableSchema;
-    private IdEncoder $aggregateIdEncoder;
+    private IdEncoder $aggregateRootIdEncoder;
     private IdEncoder $eventIdEncoder;
 
     public function __construct(
@@ -50,8 +50,8 @@ class DoctrineMessageRepository implements MessageRepository
         ?IdEncoder $eventIdEncoder = null,
     ) {
         $this->tableSchema = $tableSchema ?? new DefaultTableSchema();
-        $this->aggregateIdEncoder = $aggregateRootIdEncoder ?? new BinaryUuidIdEncoder();
-        $this->eventIdEncoder = $eventIdEncoder ?? $this->aggregateIdEncoder;
+        $this->aggregateRootIdEncoder = $aggregateRootIdEncoder ?? new BinaryUuidIdEncoder();
+        $this->eventIdEncoder = $eventIdEncoder ?? $this->aggregateRootIdEncoder;
     }
 
     public function persist(Message ...$messages): void
@@ -77,7 +77,7 @@ class DoctrineMessageRepository implements MessageRepository
 
             $messageParameters = [
                 $this->indexParameter('event_id', $index) => $this->eventIdEncoder->encodeId($payload['headers'][Header::EVENT_ID]),
-                $this->indexParameter('aggregate_root_id', $index) => $this->aggregateIdEncoder->encodeId($message->aggregateRootId()),
+                $this->indexParameter('aggregate_root_id', $index) => $this->aggregateRootIdEncoder->encodeId($message->aggregateRootId()),
                 $this->indexParameter('version', $index) => $payload['headers'][Header::AGGREGATE_ROOT_VERSION] ?? 0,
                 $this->indexParameter('payload', $index) => json_encode($payload, $this->jsonEncodeOptions),
             ];
@@ -121,7 +121,7 @@ class DoctrineMessageRepository implements MessageRepository
     {
         $builder = $this->createQueryBuilder();
         $builder->where(sprintf('%s = :aggregate_root_id', $this->tableSchema->aggregateRootIdColumn()));
-        $builder->setParameter('aggregate_root_id', $this->aggregateIdEncoder->encodeId($id));
+        $builder->setParameter('aggregate_root_id', $this->aggregateRootIdEncoder->encodeId($id));
 
         try {
             /** @var ResultStatement $resultStatement */
@@ -141,7 +141,7 @@ class DoctrineMessageRepository implements MessageRepository
         $builder = $this->createQueryBuilder();
         $builder->where(sprintf('%s = :aggregate_root_id', $this->tableSchema->aggregateRootIdColumn()));
         $builder->andWhere(sprintf('%s > :version', $this->tableSchema->versionColumn()));
-        $builder->setParameter('aggregate_root_id', $this->aggregateIdEncoder->encodeId($id));
+        $builder->setParameter('aggregate_root_id', $this->aggregateRootIdEncoder->encodeId($id));
         $builder->setParameter('version', $aggregateRootVersion);
 
         try {
