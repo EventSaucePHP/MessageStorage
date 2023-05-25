@@ -11,7 +11,7 @@ use EventSauce\MessageRepository\TableSchema\LegacyTableSchema;
 /**
  * @group illuminate
  */
-class LegacyIlluminateMessageRepositoryTest extends IlluminateUuidV4MessageRepositoryTestCase
+class LegacyIlluminateMessageRepositoryTest extends IlluminateMessageRepositoryTestCase
 {
     protected string $tableName = 'legacy_domain_messages_uuid';
 

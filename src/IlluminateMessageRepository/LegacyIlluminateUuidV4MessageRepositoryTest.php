@@ -11,7 +11,7 @@ use EventSauce\UuidEncoding\StringUuidEncoder;
 /**
  * @group illuminate
  */
-class LegacyIlluminateUuidV4MessageRepositoryTest extends IlluminateUuidV4MessageRepositoryTestCase
+class LegacyIlluminateUuidV4MessageRepositoryTest extends IlluminateMessageRepositoryTestCase
 {
     protected string $tableName = 'legacy_domain_messages_uuid';
 

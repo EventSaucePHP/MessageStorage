@@ -8,7 +8,7 @@ use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
 use function getenv;
 
-class DefaultDoctrineMessageRepositoryForPostgresTest extends DoctrineUuidV4MessageRepositoryTestCase
+class DefaultDoctrineMessageRepositoryForPostgresTest extends DoctrineMessageRepositoryTestCase
 {
     protected string $tableName = 'domain_messages_uuid';
 

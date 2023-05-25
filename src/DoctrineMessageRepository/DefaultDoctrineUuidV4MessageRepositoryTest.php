@@ -6,7 +6,7 @@ use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
 use EventSauce\UuidEncoding\BinaryUuidEncoder;
 
-class DefaultDoctrineUuidV4MessageRepositoryTest extends DoctrineUuidV4MessageRepositoryTestCase
+class DefaultDoctrineUuidV4MessageRepositoryTest extends DoctrineMessageRepositoryTestCase
 {
     protected string $tableName = 'domain_messages_uuid';
 

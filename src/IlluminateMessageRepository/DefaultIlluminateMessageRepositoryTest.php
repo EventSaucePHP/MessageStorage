@@ -10,7 +10,7 @@ use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
 /**
  * @group illuminate
  */
-class DefaultIlluminateMessageRepositoryTest extends IlluminateUuidV4MessageRepositoryTestCase
+class DefaultIlluminateMessageRepositoryTest extends IlluminateMessageRepositoryTestCase
 {
     protected string $tableName = 'domain_messages_uuid';
 

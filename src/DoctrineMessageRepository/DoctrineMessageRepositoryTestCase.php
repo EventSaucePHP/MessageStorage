@@ -6,7 +6,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\DriverManager;
 use EventSauce\EventSourcing\AggregateRootId;
-use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Ramsey\Uuid\Uuid;
 
@@ -14,7 +13,7 @@ use function class_exists;
 use function getenv;
 use function str_starts_with;
 
-abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepositoryTestCase
+abstract class DoctrineMessageRepositoryTestCase extends MessageRepositoryTestCase
 {
     protected Connection $connection;
 

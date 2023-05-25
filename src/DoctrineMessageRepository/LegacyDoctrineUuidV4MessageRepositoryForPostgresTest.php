@@ -8,7 +8,7 @@ use EventSauce\UuidEncoding\StringUuidEncoder;
 
 use function getenv;
 
-class LegacyDoctrineUuidV4MessageRepositoryForPostgresTest extends DoctrineUuidV4MessageRepositoryTestCase
+class LegacyDoctrineUuidV4MessageRepositoryForPostgresTest extends DoctrineMessageRepositoryTestCase
 {
     protected string $tableName = 'legacy_domain_messages_uuid';
 

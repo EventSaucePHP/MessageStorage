@@ -10,7 +10,7 @@ use EventSauce\UuidEncoding\StringUuidEncoder;
 
 use function getenv;
 
-class DefaultDoctrineUuidV4MessageRepositoryForPostgresTest extends DoctrineUuidV4MessageRepositoryTestCase
+class DefaultDoctrineUuidV4MessageRepositoryForPostgresTest extends DoctrineMessageRepositoryTestCase
 {
     protected string $tableName = 'domain_messages_uuid';
 
