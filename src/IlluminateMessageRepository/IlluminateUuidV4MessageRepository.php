@@ -27,6 +27,10 @@ use function get_class;
 use function json_decode;
 use function sprintf;
 
+/**
+ * @deprecated Will be removed in 2.0.0
+ * @see IlluminateMessageRepository
+ */
 class IlluminateUuidV4MessageRepository implements MessageRepository
 {
     private TableSchema $tableSchema;

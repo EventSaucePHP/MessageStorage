@@ -15,8 +15,6 @@ use EventSauce\IdEncoding\BinaryUuidIdEncoder;
 use EventSauce\IdEncoding\IdEncoder;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
 use EventSauce\MessageRepository\TableSchema\TableSchema;
-use EventSauce\UuidEncoding\BinaryUuidEncoder;
-use EventSauce\UuidEncoding\UuidEncoder;
 use Generator;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Collection;
