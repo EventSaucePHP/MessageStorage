@@ -7,7 +7,7 @@ use EventSauce\EventSourcing\AggregateRootId;
 
 class StringIdEncoder implements IdEncoder
 {
-    public function encodeId(AggregateRootId|string $id): mixed
+    public function encodeId(AggregateRootId|string $id): string
     {
         return $id instanceof AggregateRootId
             ? $id->toString()
