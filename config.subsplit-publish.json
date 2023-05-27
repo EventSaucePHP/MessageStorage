@@ -1,9 +1,10 @@
 {
     "dependencies-must-satisfy": {
-        "eventsauce/eventsauce": "1.0.0",
-        "eventsauce/message-outbox": "0.1.0",
-        "eventsauce/uuid-encoding": "0.2.0",
-        "eventsauce/message-repository-table-schema": "0.2.0"
+        "eventsauce/eventsauce": "3.0.0",
+        "eventsauce/message-outbox": "1.0.0",
+        "eventsauce/uuid-encoding": "1.0.0",
+        "eventsauce/id-encoding": "1.0.0",
+        "eventsauce/message-repository-table-schema": "1.0.0"
     },
     "sub-splits": [
         {
@@ -60,6 +61,11 @@
             "name": "uuid-encoding",
             "directory": "src/UuidEncoding",
             "target": "git@github.com:EventSaucePHP/UuidEncoding.git"
+        },
+        {
+            "name": "id-encoding",
+            "directory": "src/IdEncoding",
+            "target": "git@github.com:EventSaucePHP/IdEncoding.git"
         }
     ]
 }
