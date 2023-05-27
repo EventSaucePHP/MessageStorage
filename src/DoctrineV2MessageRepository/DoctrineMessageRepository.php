@@ -15,17 +15,15 @@ use EventSauce\EventSourcing\PaginationCursor;
 use EventSauce\EventSourcing\Serialization\MessageSerializer;
 use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\EventSourcing\UnableToRetrieveMessages;
+use EventSauce\IdEncoding\BinaryUuidIdEncoder;
+use EventSauce\IdEncoding\IdEncoder;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
 use EventSauce\MessageRepository\TableSchema\TableSchema;
-use EventSauce\UuidEncoding\BinaryUuidEncoder;
-use EventSauce\UuidEncoding\UuidEncoder;
 use Generator;
 use LogicException;
 use Ramsey\Uuid\Uuid;
 use Throwable;
-
 use Traversable;
-
 use function array_keys;
 use function array_map;
 use function array_merge;
@@ -36,14 +34,11 @@ use function json_decode;
 use function json_encode;
 use function sprintf;
 
-/**
- * @deprecated Will be removed in 2.0.0
- * @see DoctrineMessageRepository
- */
-class DoctrineUuidV4MessageRepository implements MessageRepository
+class DoctrineMessageRepository implements MessageRepository
 {
     private TableSchema $tableSchema;
-    private UuidEncoder $uuidEncoder;
+    private IdEncoder $aggregateRootIdEncoder;
+    private IdEncoder $eventIdEncoder;
 
     public function __construct(
         private Connection $connection,
@@ -51,10 +46,12 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
         private MessageSerializer $serializer,
         private int $jsonEncodeOptions = 0,
         ?TableSchema $tableSchema = null,
-        ?UuidEncoder $uuidEncoder = null,
+        ?IdEncoder $aggregateRootIdEncoder = null,
+        ?IdEncoder $eventIdEncoder = null,
     ) {
         $this->tableSchema = $tableSchema ?? new DefaultTableSchema();
-        $this->uuidEncoder = $uuidEncoder ?? new BinaryUuidEncoder();
+        $this->aggregateRootIdEncoder = $aggregateRootIdEncoder ?? new BinaryUuidIdEncoder();
+        $this->eventIdEncoder = $eventIdEncoder ?? $this->aggregateRootIdEncoder;
     }
 
     public function persist(Message ...$messages): void
@@ -79,8 +76,8 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
             $payload['headers'][Header::EVENT_ID] ??= Uuid::uuid4()->toString();
 
             $messageParameters = [
-                $this->indexParameter('event_id', $index) => $this->uuidEncoder->encodeString($payload['headers'][Header::EVENT_ID]),
-                $this->indexParameter('aggregate_root_id', $index) => $this->uuidEncoder->encodeString($payload['headers'][Header::AGGREGATE_ROOT_ID]),
+                $this->indexParameter('event_id', $index) => $this->eventIdEncoder->encodeId($payload['headers'][Header::EVENT_ID]),
+                $this->indexParameter('aggregate_root_id', $index) => $this->aggregateRootIdEncoder->encodeId($message->aggregateRootId()),
                 $this->indexParameter('version', $index) => $payload['headers'][Header::AGGREGATE_ROOT_VERSION] ?? 0,
                 $this->indexParameter('payload', $index) => json_encode($payload, $this->jsonEncodeOptions),
             ];
@@ -124,7 +121,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
     {
         $builder = $this->createQueryBuilder();
         $builder->where(sprintf('%s = :aggregate_root_id', $this->tableSchema->aggregateRootIdColumn()));
-        $builder->setParameter('aggregate_root_id', $this->uuidEncoder->encodeString($id->toString()));
+        $builder->setParameter('aggregate_root_id', $this->aggregateRootIdEncoder->encodeId($id));
 
         try {
             /** @var ResultStatement $resultStatement */
@@ -144,7 +141,7 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
         $builder = $this->createQueryBuilder();
         $builder->where(sprintf('%s = :aggregate_root_id', $this->tableSchema->aggregateRootIdColumn()));
         $builder->andWhere(sprintf('%s > :version', $this->tableSchema->versionColumn()));
-        $builder->setParameter('aggregate_root_id', $this->uuidEncoder->encodeString($id->toString()));
+        $builder->setParameter('aggregate_root_id', $this->aggregateRootIdEncoder->encodeId($id));
         $builder->setParameter('version', $aggregateRootVersion);
 
         try {

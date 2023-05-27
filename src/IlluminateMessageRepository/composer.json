@@ -9,20 +9,16 @@
         }
     ],
     "require": {
-        "eventsauce/eventsauce": "^1.0||^2.0||^3.0",
-        "eventsauce/message-repository-table-schema": "^0.2||^0.3||^0.4",
-        "eventsauce/uuid-encoding": "^0.2||^0.3||^0.4",
-        "illuminate/database": "^8.35||^9.0.0||^10.0.0",
+        "eventsauce/eventsauce": "^3.0",
+        "eventsauce/message-repository-table-schema": "^1.0",
+        "eventsauce/uuid-encoding": "^1.0",
+        "eventsauce/id-encoding": "^1.0",
+        "illuminate/database": "^9.0.0||^10.0.0",
         "ramsey/uuid": "^4.1"
     },
     "autoload": {
         "psr-4": {
             "EventSauce\\MessageRepository\\IlluminateMessageRepository\\": "./"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-main": "0.3-dev"
         }
     }
 }

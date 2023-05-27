@@ -1,6 +1,6 @@
 {
-    "name": "eventsauce/uuid-encoding",
-    "description": "UUID encoding utility",
+    "name": "eventsauce/id-encoding",
+    "description": "ID encoding utility",
     "license": "MIT",
     "authors": [
         {
@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "EventSauce\\UuidEncoding\\": "./"
+            "EventSauce\\IdEncoding\\": "./"
         }
     }
 }

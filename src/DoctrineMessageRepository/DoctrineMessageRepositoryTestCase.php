@@ -13,7 +13,7 @@ use function class_exists;
 use function getenv;
 use function str_starts_with;
 
-abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepositoryTestCase
+abstract class DoctrineMessageRepositoryTestCase extends MessageRepositoryTestCase
 {
     protected Connection $connection;
 
@@ -46,8 +46,6 @@ abstract class DoctrineUuidV4MessageRepositoryTestCase extends MessageRepository
             $this->connection->executeQuery('TRUNCATE TABLE ' . $this->tableName . ' RESTART IDENTITY CASCADE');
         }
     }
-
-    abstract protected function messageRepository(): DoctrineUuidV4MessageRepository;
 
     protected function aggregateRootId(): AggregateRootId
     {

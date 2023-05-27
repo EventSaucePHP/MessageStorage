@@ -11,7 +11,7 @@ use Ramsey\Uuid\Uuid;
 /**
  * @group illuminate
  */
-abstract class IlluminateUuidV4MessageRepositoryTestCase extends MessageRepositoryTestCase
+abstract class IlluminateMessageRepositoryTestCase extends MessageRepositoryTestCase
 {
     protected Connection $connection;
 

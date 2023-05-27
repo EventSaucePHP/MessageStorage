@@ -9,7 +9,7 @@ use EventSauce\UuidEncoding\BinaryUuidEncoder;
 /**
  * @group doctrine2
  */
-class DefaultDoctrineUuidV4MessageRepositoryTest extends DoctrineUuidV4MessageRepositoryTestCase
+class DefaultDoctrineUuidV4MessageRepositoryTest extends DoctrineMessageRepositoryTestCase
 {
     protected string $tableName = 'domain_messages_uuid';
 

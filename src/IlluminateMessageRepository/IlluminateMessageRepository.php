@@ -11,30 +11,26 @@ use EventSauce\EventSourcing\PaginationCursor;
 use EventSauce\EventSourcing\Serialization\MessageSerializer;
 use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\EventSourcing\UnableToRetrieveMessages;
+use EventSauce\IdEncoding\BinaryUuidIdEncoder;
+use EventSauce\IdEncoding\IdEncoder;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
 use EventSauce\MessageRepository\TableSchema\TableSchema;
-use EventSauce\UuidEncoding\BinaryUuidEncoder;
-use EventSauce\UuidEncoding\UuidEncoder;
 use Generator;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Collection;
 use LogicException;
 use Ramsey\Uuid\Uuid;
 use Throwable;
-
 use function count;
 use function get_class;
 use function json_decode;
 use function sprintf;
 
-/**
- * @deprecated Will be removed in 2.0.0
- * @see IlluminateMessageRepository
- */
-class IlluminateUuidV4MessageRepository implements MessageRepository
+class IlluminateMessageRepository implements MessageRepository
 {
     private TableSchema $tableSchema;
-    private UuidEncoder $uuidEncoder;
+    private IdEncoder $aggregateRootIdEncoder;
+    private IdEncoder $eventIdEncoder;
 
     public function __construct(
         private ConnectionInterface $connection,
@@ -42,10 +38,12 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
         private MessageSerializer $serializer,
         private int $jsonEncodeOptions = 0,
         ?TableSchema $tableSchema = null,
-        ?UuidEncoder $uuidEncoder = null,
+        ?IdEncoder $aggregateRootIdEncoder = null,
+        ?IdEncoder $eventIdEncoder = null,
     ) {
         $this->tableSchema = $tableSchema ?? new DefaultTableSchema();
-        $this->uuidEncoder = $uuidEncoder ?? new BinaryUuidEncoder();
+        $this->aggregateRootIdEncoder = $aggregateRootIdEncoder ?? new BinaryUuidIdEncoder();
+        $this->eventIdEncoder = $eventIdEncoder ?? $this->aggregateRootIdEncoder;
     }
 
     public function persist(Message ...$messages): void
@@ -66,9 +64,9 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
             $payload = $this->serializer->serializeMessage($message);
             $parameters[$versionColumn] = $payload['headers'][Header::AGGREGATE_ROOT_VERSION] ?? 0;
             $payload['headers'][Header::EVENT_ID] = $payload['headers'][Header::EVENT_ID] ?? Uuid::uuid4()->toString();
-            $parameters[$eventIdColumn] = $this->uuidEncoder->encodeString($payload['headers'][Header::EVENT_ID]);
+            $parameters[$eventIdColumn] = $this->eventIdEncoder->encodeId($payload['headers'][Header::EVENT_ID]);
             $parameters[$payloadColumn] = json_encode($payload, $this->jsonEncodeOptions);
-            $parameters[$aggregateRootIdColumn] = $this->uuidEncoder->encodeString($payload['headers'][Header::AGGREGATE_ROOT_ID]);
+            $parameters[$aggregateRootIdColumn] = $this->aggregateRootIdEncoder->encodeId($message->aggregateRootId());
 
             foreach ($additionalColumns as $column => $header) {
                 $parameters[$column] = $payload['headers'][$header];
@@ -87,7 +85,7 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
     public function retrieveAll(AggregateRootId $id): Generator
     {
         $builder = $this->connection->table($this->tableName)
-            ->where($this->tableSchema->aggregateRootIdColumn(), $this->uuidEncoder->encodeString($id->toString()))
+            ->where($this->tableSchema->aggregateRootIdColumn(), $this->aggregateRootIdEncoder->encodeId($id))
             ->orderBy($this->tableSchema->versionColumn(), 'ASC');
 
         try {
@@ -102,7 +100,7 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
     {
         $versionColumn = $this->tableSchema->versionColumn();
         $builder = $this->connection->table($this->tableName)
-            ->where($this->tableSchema->aggregateRootIdColumn(), $this->uuidEncoder->encodeString($id->toString()))
+            ->where($this->tableSchema->aggregateRootIdColumn(), $this->aggregateRootIdEncoder->encodeId($id))
             ->where($versionColumn, '>', $aggregateRootVersion)
             ->orderBy($versionColumn, 'ASC');
 

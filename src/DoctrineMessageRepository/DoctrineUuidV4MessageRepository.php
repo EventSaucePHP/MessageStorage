@@ -31,8 +31,11 @@ use function implode;
 use function json_decode;
 use function json_encode;
 use function sprintf;
-use function var_dump;
 
+/**
+ * @deprecated Will be removed in 2.0.0
+ * @see DoctrineMessageRepository
+ */
 class DoctrineUuidV4MessageRepository implements MessageRepository
 {
     private TableSchema $tableSchema;

@@ -2,26 +2,24 @@
 
 namespace EventSauce\MessageRepository\DoctrineMessageRepository;
 
+use EventSauce\IdEncoding\StringIdEncoder;
+use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
-use EventSauce\UuidEncoding\BinaryUuidEncoder;
-
-use EventSauce\UuidEncoding\StringUuidEncoder;
-
 use function getenv;
 
-class DefaultDoctrineUuidV4MessageRepositoryForPostgresTest extends DoctrineMessageRepositoryTestCase
+class DefaultDoctrineMessageRepositoryForPostgresTest extends DoctrineMessageRepositoryTestCase
 {
     protected string $tableName = 'domain_messages_uuid';
 
-    protected function messageRepository(): DoctrineUuidV4MessageRepository
+    protected function messageRepository(): MessageRepository
     {
-        return new DoctrineUuidV4MessageRepository(
+        return new DoctrineMessageRepository(
             connection: $this->connection,
             tableName: $this->tableName,
             serializer: new ConstructingMessageSerializer(),
             tableSchema: new DefaultTableSchema(),
-            uuidEncoder: new StringUuidEncoder(),
+            aggregateRootIdEncoder: new StringIdEncoder(),
         );
     }
 
