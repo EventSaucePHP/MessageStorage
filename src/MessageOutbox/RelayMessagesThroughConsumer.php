@@ -10,7 +10,7 @@ use Throwable;
 
 use function count;
 
-class RelayMessagesThroughConsumer
+class RelayMessagesThroughConsumer implements RelayMessages
 {
     private BackOffStrategy $backOff;
     private RelayCommitStrategy $commitStrategy;
