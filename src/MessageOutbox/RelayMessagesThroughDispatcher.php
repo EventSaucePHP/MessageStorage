@@ -12,7 +12,7 @@ use Traversable;
 
 use function count;
 
-final class RelayMessagesThroughDispatcher
+final class RelayMessagesThroughDispatcher implements RelayMessages
 {
     private BackOffStrategy $backOff;
     private RelayCommitStrategy $commitStrategy;
