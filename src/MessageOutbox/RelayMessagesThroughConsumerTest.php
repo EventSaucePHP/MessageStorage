@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 use function iterator_to_array;
 
-class OutboxRelayTest extends TestCase
+class RelayMessagesThroughConsumerTest extends TestCase
 {
     /**
      * @test
@@ -29,7 +29,7 @@ class OutboxRelayTest extends TestCase
                 $this->messages[] = $message;
             }
         };
-        $relay = new OutboxRelay($repository, $consumer);
+        $relay = new RelayMessagesThroughConsumer($repository, $consumer);
         $message1 = $this->createMessage('one');
         $message2 = $this->createMessage('two');
         $message3 = $this->createMessage('three');
@@ -69,7 +69,7 @@ class OutboxRelayTest extends TestCase
                 $this->messageCount++;
             }
         };
-        $relay = new OutboxRelay($repository, $consumer);
+        $relay = new RelayMessagesThroughConsumer($repository, $consumer);
         $message1 = $this->createMessage('one');
         $message2 = $this->createMessage('two');
         $message3 = $this->createMessage('three');
@@ -109,7 +109,7 @@ class OutboxRelayTest extends TestCase
                 $this->handledCount++;
             }
         };
-        $relay = new OutboxRelay($repository, $consumer, new NoWaitingBackOffStrategy(25));
+        $relay = new RelayMessagesThroughConsumer($repository, $consumer, new NoWaitingBackOffStrategy(25));
         $message1 = $this->createMessage('one');
         $message2 = $this->createMessage('two');
         $message3 = $this->createMessage('three');
@@ -141,7 +141,7 @@ class OutboxRelayTest extends TestCase
                 $this->callCount++;
             }
         };
-        $relay = new OutboxRelay(
+        $relay = new RelayMessagesThroughConsumer(
             $repository, $consumer, new NoWaitingBackOffStrategy(25), new DeleteMessageOnCommit(),
         );
         $message1 = $this->createMessage('one');
