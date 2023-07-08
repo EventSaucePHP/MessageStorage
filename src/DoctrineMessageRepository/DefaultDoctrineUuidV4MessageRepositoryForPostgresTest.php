@@ -4,8 +4,6 @@ namespace EventSauce\MessageRepository\DoctrineMessageRepository;
 
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
-use EventSauce\UuidEncoding\BinaryUuidEncoder;
-
 use EventSauce\UuidEncoding\StringUuidEncoder;
 
 use function getenv;
