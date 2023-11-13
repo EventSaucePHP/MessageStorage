@@ -138,10 +138,10 @@ class IlluminateMessageRepository implements MessageRepository
             ->orderBy($incrementalIdColumn, 'ASC');
 
         try {
-            $result = $builder->get(['payload']);
+            $result = $builder->get([$incrementalIdColumn, 'payload']);
 
             foreach ($result as $row) {
-                $offset++;
+                $offset = $row->{$incrementalIdColumn};
                 yield $this->serializer->unserializePayload(json_decode($row->payload, true));
             }
 
