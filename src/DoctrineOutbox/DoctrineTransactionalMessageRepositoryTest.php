@@ -9,6 +9,7 @@ use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageOutbox\OutboxRepository;
+use EventSauce\MessageOutbox\TestTooling\DoctrineConnectionTrait;
 use EventSauce\MessageOutbox\TestTooling\TransactionalMessageRepositoryTestCase;
 use EventSauce\MessageRepository\DoctrineMessageRepository\DoctrineUuidV4MessageRepository;
 use EventSauce\MessageRepository\DoctrineMessageRepository\DummyAggregateRootId;
@@ -18,6 +19,8 @@ use function interface_exists;
 
 class DoctrineTransactionalMessageRepositoryTest extends TransactionalMessageRepositoryTestCase
 {
+    use DoctrineConnectionTrait;
+
     private Connection $connection;
 
     protected function setUp(): void
@@ -28,17 +31,18 @@ class DoctrineTransactionalMessageRepositoryTest extends TransactionalMessageRep
 
         parent::setUp();
 
-        $host = getenv('EVENTSAUCE_TESTING_MYSQL_HOST') ?: '127.0.0.1';
-        $port = getenv('EVENTSAUCE_TESTING_MYSQL_PORT') ?: '3306';
-
-        $this->connection = DriverManager::getConnection(
-            [
-                'url' => "mysql://username:password@$host:$port/outbox_messages",
-            ]
-        );
+        $this->connection = DriverManager::getConnection($this->getConnectionParams());
 
         $this->connection->executeQuery('TRUNCATE TABLE '.$this->repositoryTable);
         $this->connection->executeQuery('TRUNCATE TABLE '.$this->outboxTable);
+    }
+
+    protected function formatDsn(): string
+    {
+        $host = getenv('EVENTSAUCE_TESTING_MYSQL_HOST') ?: '127.0.0.1';
+        $port = getenv('EVENTSAUCE_TESTING_MYSQL_PORT') ?: '3306';
+
+        return "mysql://username:password@$host:$port/outbox_messages";
     }
 
     protected function messageRepository(): MessageRepository

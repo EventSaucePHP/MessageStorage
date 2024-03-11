@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\DriverManager;
 use EventSauce\EventSourcing\AggregateRootId;
+use EventSauce\MessageOutbox\TestTooling\DoctrineConnectionTrait;
 use EventSauce\MessageRepository\TestTooling\MessageRepositoryTestCase;
 use Ramsey\Uuid\Uuid;
 
@@ -15,6 +16,8 @@ use function str_starts_with;
 
 abstract class DoctrineMessageRepositoryTestCase extends MessageRepositoryTestCase
 {
+    use DoctrineConnectionTrait;
+
     protected Connection $connection;
 
     protected function setUp(): void
@@ -24,7 +27,7 @@ abstract class DoctrineMessageRepositoryTestCase extends MessageRepositoryTestCa
         }
 
         parent::setUp();
-        $connection = DriverManager::getConnection(['url' => $this->formatDsn()]);
+        $connection = DriverManager::getConnection($this->getConnectionParams());
         $this->connection = $connection;
         $this->truncateTable();
     }
