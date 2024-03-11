@@ -2,6 +2,7 @@
 
 namespace EventSauce\MessageOutbox\DoctrineOutbox;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use EventSauce\EventSourcing\Message;
@@ -69,7 +70,7 @@ class DoctrineOutboxRepository implements OutboxRepository
         $this->connection->executeQuery($sqlStatement, [
             'ids' => $ids,
         ], [
-            'ids' => Connection::PARAM_INT_ARRAY,
+            'ids' => $this->intArrayType(),
         ]);
     }
 
@@ -88,7 +89,7 @@ class DoctrineOutboxRepository implements OutboxRepository
         $this->connection->executeQuery($sqlStatement, [
             'ids' => $ids,
         ], [
-            'ids' => Connection::PARAM_INT_ARRAY,
+            'ids' => $this->intArrayType(),
         ]);
     }
 
@@ -128,5 +129,14 @@ class DoctrineOutboxRepository implements OutboxRepository
         $id = $message->header(self::DOCTRINE_OUTBOX_MESSAGE_ID);
 
         return (int) $id;
+    }
+
+    private function intArrayType(): mixed
+    {
+        if (class_exists(ArrayParameterType::class)) {
+            return ArrayParameterType::INTEGER;
+        }
+
+        return Connection::PARAM_INT_ARRAY;
     }
 }
