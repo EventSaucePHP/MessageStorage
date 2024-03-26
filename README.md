@@ -74,7 +74,7 @@ dependencies for the project must first be updated to
 use Doctrine 2 instead of the Doctrine 3 default.
 
 ```shell
-composer require doctrine/dbal:^2.6
+composer require doctrine/dbal:^2.12
 ```
 
 This will replace Doctrine 3 with Doctrine 2. **This
@@ -110,3 +110,11 @@ docker-compose up
 ```
 
 Once running, the testing commands can be run.
+
+It also has some helper services to run tests on different php versions.
+For example to emulate what happens in the Github Workflow:
+
+```
+docker compose run --rm php80 composer require 'doctrine/dbal:^2.12' 'carbonphp/carbon-doctrine-types:*' -w --prefer-stable
+docker compose run --rm php80 ./vendor/bin/phpunit --group=doctrine2
+```
