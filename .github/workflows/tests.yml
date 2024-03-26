@@ -69,13 +69,16 @@ jobs:
         run: vendor/bin/phpunit --exclude-group=doctrine2
 
       - name: Install doctrine 4
+        if: ${{ matrix.php >= 8.1 }}
         run: |
           composer require "doctrine/dbal:^4.0" -w --prefer-dist --no-interaction --no-update
 
       - name: Install dependencies
+        if: ${{ matrix.php >= 8.1 }}
         run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
+        if: ${{ matrix.php >= 8.1 }}
         run: vendor/bin/phpunit --exclude-group=doctrine2
 
       - name: Run PHPStan
