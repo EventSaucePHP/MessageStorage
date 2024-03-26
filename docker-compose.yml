@@ -20,3 +20,35 @@ services:
             POSTGRES_PASSWORD: "password"
         ports:
             - "5432:5432"
+
+    php80: &base
+      build:
+        context: .
+        args:
+          PHP_VERSION: 8.0
+      environment:
+        EVENTSAUCE_TESTING_MYSQL_HOST: 'mysql'
+        EVENTSAUCE_TESTING_PGSQL_HOST: 'postgres'
+      profiles:
+        - testing
+      working_dir: /app
+      volumes:
+        - ./:/app
+
+    php81:
+      <<: *base
+      build:
+        args:
+          PHP_VERSION: 8.1
+
+    php82:
+      <<: *base
+      build:
+        args:
+          PHP_VERSION: 8.2
+
+    php83:
+      <<: *base
+      build:
+        args:
+          PHP_VERSION: 8.3

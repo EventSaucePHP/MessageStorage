@@ -110,3 +110,11 @@ docker-compose up
 ```
 
 Once running, the testing commands can be run.
+
+It also has some helper services to run tests on different php versions.
+For example to emulate what happens in the Github Workflow:
+
+```
+docker compose run --rm php80 composer require 'doctrine/dbal:^2.12' 'carbonphp/carbon-doctrine-types:*' -w --prefer-stable
+docker compose run --rm php80 ./vendor/bin/phpunit --group=doctrine2
+```
