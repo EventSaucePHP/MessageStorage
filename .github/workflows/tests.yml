@@ -55,7 +55,7 @@ jobs:
         run: |
           composer require "eventsauce/eventsauce=${{ matrix.eventsauce }}" -w --prefer-dist --no-interaction --no-update
 
-      - name: Install specific doctrine version
+      - name: Install doctrine 3
         run: |
           composer require "doctrine/dbal:^3.1" -w --prefer-dist --no-interaction --no-update
 
@@ -64,6 +64,16 @@ jobs:
 
       - name: Setup database
         run: php src/wait-for-and-setup-database.php
+
+      - name: Execute tests
+        run: vendor/bin/phpunit --exclude-group=doctrine2
+
+      - name: Install doctrine 4
+        run: |
+          composer require "doctrine/dbal:^4.0" -w --prefer-dist --no-interaction --no-update
+
+      - name: Install dependencies
+        run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
         run: vendor/bin/phpunit --exclude-group=doctrine2
