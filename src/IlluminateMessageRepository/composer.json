@@ -13,7 +13,7 @@
         "eventsauce/message-repository-table-schema": "^1.0",
         "eventsauce/uuid-encoding": "^1.0",
         "eventsauce/id-encoding": "^1.0",
-        "illuminate/database": "^9.0.0||^10.0.0",
+        "illuminate/database": "^9.0||^10.0||^11.0",
         "ramsey/uuid": "^4.1"
     },
     "autoload": {
