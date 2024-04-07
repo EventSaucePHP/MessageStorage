@@ -176,25 +176,26 @@ class DoctrineMessageRepository implements MessageRepository
             throw new LogicException(sprintf('Wrong cursor type used, expected %s, received %s', OffsetCursor::class, get_class($cursor)));
         }
 
-        $numberOfMessages = 0;
-        $builder = $this->connection->createQueryBuilder();
-        $builder->select($this->tableSchema->payloadColumn());
-        $builder->from($this->tableName);
+        $offset = $cursor->offset();
         $incrementalIdColumn = $this->tableSchema->incrementalIdColumn();
+
+        $builder = $this->connection->createQueryBuilder();
+        $builder->select($incrementalIdColumn, $this->tableSchema->payloadColumn());
+        $builder->from($this->tableName);
         $builder->orderBy($incrementalIdColumn, 'ASC');
         $builder->setMaxResults($cursor->limit());
         $builder->where($incrementalIdColumn . ' > :id');
         $builder->setParameter('id', $cursor->offset());
 
         try {
-            foreach ($builder->executeQuery()->iterateColumn() as $payload) {
-                $numberOfMessages++;
-                yield $this->serializer->unserializePayload(json_decode($payload, true));
+            foreach ($builder->executeQuery()->iterateAssociative() as $row) {
+                $offset = $row[$incrementalIdColumn];
+                yield $this->serializer->unserializePayload(json_decode($row['payload'], true));
             }
         } catch (Throwable $exception) {
             throw UnableToRetrieveMessages::dueTo($exception->getMessage(), $exception);
         }
 
-        return $cursor->plusOffset($numberOfMessages);
+        return $cursor->withOffset($offset);
     }
 }
