@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.0 - 2024-04-07
+
+### Added
+
+- Doctrine V4 support (@wjzijderveld)
+- Support Laravel 11 (@axlon)
+
+### Fixed
+
+- Support pagination when there are gaps in the IDs (@thomasschiet)  
+
+
 ## 1.1.0 - 2023-07-08
 
 ### Added
