@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1 - 2024-05-22
+
+- Doctrine V4 support for subsplits (@wjzijderveld)
+
 ## 1.2.0 - 2024-04-07
 
 ### Added
