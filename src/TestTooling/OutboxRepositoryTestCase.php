@@ -60,6 +60,35 @@ abstract class OutboxRepositoryTestCase extends TestCase
     /**
      * @test
      */
+    public function persisted_messages_can_be_retrieved_after_consumption(): void
+    {
+        $repository = $this->outboxMessageRepository();
+        $message1 = $this->createMessage('one');
+        $message2 = $this->createMessage('two');
+        $message3 = $this->createMessage('three');
+
+        $repository->persist($message1, $message2, $message3);
+        $messages = iterator_to_array($repository->retrieveBatch(1));
+
+        $this->assertCount(1, $messages);
+        $this->assertEquals($message1->payload(), $messages[0]->event());
+
+        $repository->markConsumed(...$messages);
+        $messages = iterator_to_array($repository->retrieveBatch(1));
+
+        $this->assertCount(1, $messages);
+        $this->assertEquals($message2->payload(), $messages[0]->event());
+
+        $repository->markConsumed(...$messages);
+        $messages = iterator_to_array($repository->retrieveBatch(1));
+
+        $this->assertCount(1, $messages);
+        $this->assertEquals($message3->payload(), $messages[0]->event());
+    }
+
+    /**
+     * @test
+     */
     public function it_exposes_counts_of_messages(): void
     {
         // Arrange

@@ -29,12 +29,15 @@ class InMemoryOutboxRepository implements OutboxRepository
 
     public function retrieveBatch(int $batchSize): Traversable
     {
-        /** @var list<Message> $messages */
-        $messages = array_slice(array_values($this->messages), 0, $batchSize);
+        $yielded = 0;
 
-        foreach ($messages as $message) {
+        foreach (array_values($this->messages) as $message) {
             if ($message->header(self::IS_CONSUMED_HEADER) !== 1) {
                 yield $message;
+
+                if (++$yielded >= $batchSize) {
+                    return;
+                }
             }
         }
     }
