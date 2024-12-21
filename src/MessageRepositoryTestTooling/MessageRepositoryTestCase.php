@@ -37,7 +37,7 @@ abstract class MessageRepositoryTestCase extends TestCase
         $this->aggregateRootId = $this->aggregateRootId();
     }
 
-    protected function createMessage(string $value, AggregateRootId $id = null): Message
+    protected function createMessage(string $value, ?AggregateRootId $id = null): Message
     {
         $id ??= $this->aggregateRootId;
         $type = (new DotSeparatedSnakeCaseInflector())->classNameToType(get_class($id));

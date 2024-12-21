@@ -18,14 +18,14 @@ class RelayMessagesThroughConsumer implements RelayMessages
     public function __construct(
         private OutboxRepository $repository,
         private MessageConsumer $consumer,
-        BackOffStrategy $backOff = null,
-        RelayCommitStrategy $commitStrategy = null
+        ?BackOffStrategy $backOff = null,
+        ?RelayCommitStrategy $commitStrategy = null
     ) {
         $this->backOff = $backOff ?: new ExponentialBackOffStrategy(100000, 25);
         $this->commitStrategy = $commitStrategy ?: new MarkMessagesConsumedOnCommit();
     }
 
-    public function publishBatch(int $batchSize, int $commitSize = 1): int
+    public function publishBatch(int $batchSize, ?int $commitSize = 1): int
     {
         /** @var Message $messages */
         $messages = $this->repository->retrieveBatch($batchSize);
