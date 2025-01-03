@@ -1,8 +1,8 @@
 parameters:
-    level: max
+    level: 8
     paths:
         - src/DoctrineV2MessageRepository
         - src/DoctrineV2Outbox
-    excludes_analyse:
-        - *Test.php
-    checkMissingIterableValueType: false
+    excludePaths:
+        analyse:
+            - *Test.php

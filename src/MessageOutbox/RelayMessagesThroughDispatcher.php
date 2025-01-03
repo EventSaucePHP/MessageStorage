@@ -32,7 +32,7 @@ final class RelayMessagesThroughDispatcher implements RelayMessages
         $numberPublished = 0;
         $messages = $this->repository->retrieveBatch($batchSize);
 
-        foreach ($this->batchByCommitSize($messages, $commitSize) as $batch) {
+        foreach ($this->batchByCommitSize($messages, $commitSize ?? 1) as $batch) {
             $numberPublished += $this->dispatchMessages($batch);
         }
 

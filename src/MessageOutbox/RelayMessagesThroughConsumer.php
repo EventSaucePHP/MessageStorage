@@ -8,6 +8,7 @@ use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageConsumer;
 use Throwable;
 
+use Traversable;
 use function count;
 
 class RelayMessagesThroughConsumer implements RelayMessages
@@ -27,10 +28,10 @@ class RelayMessagesThroughConsumer implements RelayMessages
 
     public function publishBatch(int $batchSize, ?int $commitSize = 1): int
     {
-        /** @var Message $messages */
+        /** @var Traversable<Message> $messages */
         $messages = $this->repository->retrieveBatch($batchSize);
         $numberPublished = 0;
-        /** @var Message $publishedMessages */
+        /** @var Message[] $publishedMessages */
         $publishedMessages = [];
 
         foreach ($messages as $message) {

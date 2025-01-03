@@ -19,6 +19,9 @@ class MySQL8DateFormatting implements MessageSerializer
     ) {
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function serializeMessage(Message $message): array
     {
         $payload = $this->messageSerializer->serializeMessage($message);
@@ -31,6 +34,9 @@ class MySQL8DateFormatting implements MessageSerializer
         return $payload;
     }
 
+    /**
+     * @param array<string, mixed> $payload
+     */
     public function unserializePayload(array $payload): Message
     {
         $dateTimeString = $payload['headers'][$this->field] ?? null;

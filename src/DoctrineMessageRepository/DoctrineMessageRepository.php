@@ -69,13 +69,14 @@ class DoctrineMessageRepository implements MessageRepository
         $insertValues = [];
         $insertParameters = [];
 
+        /** @var int $index */
         foreach ($messages as $index => $message) {
             $payload = $this->serializer->serializeMessage($message);
             $payload['headers'][Header::EVENT_ID] ??= Uuid::uuid4()->toString();
 
             $messageParameters = [
                 $this->indexParameter('event_id', $index) => $this->eventIdEncoder->encodeId($payload['headers'][Header::EVENT_ID]),
-                $this->indexParameter('aggregate_root_id', $index) => $this->aggregateRootIdEncoder->encodeId($message->aggregateRootId()),
+                $this->indexParameter('aggregate_root_id', $index) => $this->aggregateRootIdEncoder->encodeId($message->aggregateRootId() ?? ''),
                 $this->indexParameter('version', $index) => $payload['headers'][Header::AGGREGATE_ROOT_VERSION] ?? 0,
                 $this->indexParameter('payload', $index) => json_encode($payload, $this->jsonEncodeOptions),
             ];
@@ -110,6 +111,10 @@ class DoctrineMessageRepository implements MessageRepository
         return $name . '_' . $index;
     }
 
+    /**
+     * @param array<string> $parameters
+     * @return array<string>
+     */
     private function formatNamedParameters(array $parameters): array
     {
         return array_map(static fn(string $name) => ':' . $name, $parameters);
@@ -157,7 +162,8 @@ class DoctrineMessageRepository implements MessageRepository
     }
 
     /**
-     * @psalm-return Generator<Message>
+     * @param iterable<string> $payloads
+     * @return Generator<Message>
      */
     private function yieldMessagesFromPayloads(iterable $payloads): Generator
     {

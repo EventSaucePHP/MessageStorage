@@ -99,7 +99,7 @@ class DoctrineOutboxRepository implements OutboxRepository
         $statement = $this->connection->prepare($sqlStatement);
         $statement->bindValue(1, $amount, ParameterType::INTEGER);
 
-        return $statement->executeStatement();
+        return intval($statement->executeStatement());
     }
 
     public function numberOfMessages(): int
@@ -137,6 +137,6 @@ class DoctrineOutboxRepository implements OutboxRepository
             return ArrayParameterType::INTEGER;
         }
 
-        return Connection::PARAM_INT_ARRAY;
+        return ParameterType::INTEGER;
     }
 }

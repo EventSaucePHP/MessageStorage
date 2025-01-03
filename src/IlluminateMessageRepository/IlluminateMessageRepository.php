@@ -66,7 +66,7 @@ class IlluminateMessageRepository implements MessageRepository
             $payload['headers'][Header::EVENT_ID] = $payload['headers'][Header::EVENT_ID] ?? Uuid::uuid4()->toString();
             $parameters[$eventIdColumn] = $this->eventIdEncoder->encodeId($payload['headers'][Header::EVENT_ID]);
             $parameters[$payloadColumn] = json_encode($payload, $this->jsonEncodeOptions);
-            $parameters[$aggregateRootIdColumn] = $this->aggregateRootIdEncoder->encodeId($message->aggregateRootId());
+            $parameters[$aggregateRootIdColumn] = $this->aggregateRootIdEncoder->encodeId($message->aggregateRootId() ?? '');
 
             foreach ($additionalColumns as $column => $header) {
                 $parameters[$column] = $payload['headers'][$header];

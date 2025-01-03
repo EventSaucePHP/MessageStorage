@@ -13,11 +13,17 @@ final class DummyEvent implements SerializablePayload
     {
     }
 
+    /**
+     * @return string[]
+     */
     public function toPayload(): array
     {
         return ['value' => $this->value];
     }
 
+    /**
+     * @param array<string, string> $payload
+     */
     public static function fromPayload(array $payload): static
     {
         return new self($payload['value']);

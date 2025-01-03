@@ -8,6 +8,9 @@ trait DoctrineConnectionTrait
 {
     abstract function formatDsn(): string;
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function getConnectionParams(): array
     {
         $dsn = $this->formatDsn();

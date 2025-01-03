@@ -18,6 +18,8 @@ abstract class TransactionalMessageRepositoryTestCase extends TestCase
     protected string $repositoryTable = '';
     protected string $outboxTable = '';
     protected AggregateRootId $aggregateRootId;
+
+    /** @var string[]  */
     protected array $eventIds = [];
     protected int $idCounter = 0;
 
@@ -78,7 +80,7 @@ abstract class TransactionalMessageRepositoryTestCase extends TestCase
         try {
             $transactionalRepository->persist($this->createMessage('one', 1));
             // @codeCoverageIgnoreStart
-            $this->assertFalse(true, 'we failed to raise an exception');
+            $this->fail('we failed to raise an exception');
             // @codeCoverageIgnoreEnd
         } catch (UnableToPersistMessages) {
         }
@@ -99,7 +101,7 @@ abstract class TransactionalMessageRepositoryTestCase extends TestCase
         try {
             $transactionalRepository->persist($this->createMessage('one', 1));
             // @codeCoverageIgnoreStart
-            $this->assertFalse(true, 'we failed to raise an exception');
+            $this->fail('we failed to raise an exception');
             // @codeCoverageIgnoreEnd
         } catch (UnableToPersistMessages) {
         }

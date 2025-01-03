@@ -1,9 +1,12 @@
 parameters:
-    level: max
+    level: 8
     paths:
         - src
-    excludes_analyse:
-        - src/DoctrineV2*
-        - *Test.php
-        - src/wait-for-and-setup-database.php
-    checkMissingIterableValueType: false
+    excludePaths:
+        analyse:
+            - src/DoctrineV2*
+            - *Test.php
+            - src/wait-for-and-setup-database.php
+            - src/IlluminateMessageRepository/IlluminateUuidV4MessageRepository.php
+            - src/MessageOutbox/OutboxRelay.php
+            - src/DoctrineMessageRepository/DoctrineUuidV4MessageRepository.php

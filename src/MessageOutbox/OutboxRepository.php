@@ -9,6 +9,7 @@ interface OutboxRepository
 {
     public function persist(Message ...$messages): void;
 
+    /** @return Traversable<Message> */
     public function retrieveBatch(int $batchSize): Traversable;
 
     public function markConsumed(Message ...$messages): void;
