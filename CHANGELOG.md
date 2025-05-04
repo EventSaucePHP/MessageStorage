@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.0 - 2025-05-04
+
+### Fixes
+
+- In-memory storage yields expected amount of messages (#30)
+- PHP 8.4 deprecations (#34)
+- Laravel v12 support (#33)
+
 ## 1.2.1 - 2024-05-22
 
 - Doctrine V4 support for subsplits (@wjzijderveld)
