@@ -132,7 +132,7 @@ class DoctrineMessageRepository implements MessageRepository
     {
         $builder = $this->createQueryBuilder();
         $builder->where(sprintf('%s = :aggregate_root_id', $this->tableSchema->aggregateRootIdColumn()));
-        $builder->setParameter('aggregate_root_id', $this->aggregateRootIdEncoder->encodeId($id));
+        $builder->setParameter('aggregate_root_id', $this->aggregateRootIdEncoder->encodeId($id), $this->aggregateRootIdEncoder instanceof BinaryUuidIdEncoder ? ParameterType::BINARY : ParameterType::STRING);
 
         try {
             /** @var ResultStatement $resultStatement */
@@ -152,7 +152,7 @@ class DoctrineMessageRepository implements MessageRepository
         $builder = $this->createQueryBuilder();
         $builder->where(sprintf('%s = :aggregate_root_id', $this->tableSchema->aggregateRootIdColumn()));
         $builder->andWhere(sprintf('%s > :version', $this->tableSchema->versionColumn()));
-        $builder->setParameter('aggregate_root_id', $this->aggregateRootIdEncoder->encodeId($id));
+        $builder->setParameter('aggregate_root_id', $this->aggregateRootIdEncoder->encodeId($id), $this->aggregateRootIdEncoder instanceof BinaryUuidIdEncoder ? ParameterType::BINARY : ParameterType::STRING);
         $builder->setParameter('version', $aggregateRootVersion);
 
         try {

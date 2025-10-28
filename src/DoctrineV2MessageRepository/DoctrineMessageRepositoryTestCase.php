@@ -39,7 +39,7 @@ abstract class DoctrineMessageRepositoryTestCase extends MessageRepositoryTestCa
         }
 
         $warning = $this->connection->executeQuery('SHOW WARNINGS')->fetchNumeric();
-        if (count($warning) > 0) {
+        if ($warning !== false && count($warning) > 0) {
             if (str_contains($warning[2], 'Base table or view not found') || str_contains($warning[2], "doesn't exist")) {
                 // shortcut for tests
                 return;
