@@ -5,6 +5,7 @@ namespace EventSauce\MessageRepository\DoctrineV2MessageRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\ForwardCompatibility\Result;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use EventSauce\EventSourcing\AggregateRootId;
 use EventSauce\EventSourcing\Header;
@@ -75,9 +76,11 @@ class DoctrineMessageRepository implements MessageRepository
             $payload = $this->serializer->serializeMessage($message);
             $payload['headers'][Header::EVENT_ID] ??= Uuid::uuid4()->toString();
 
+            $eventIdIndex = $this->indexParameter('event_id', $index);
+            $aggregateRootIdIndex = $this->indexParameter('aggregate_root_id', $index);
             $messageParameters = [
-                $this->indexParameter('event_id', $index) => $this->eventIdEncoder->encodeId($payload['headers'][Header::EVENT_ID]),
-                $this->indexParameter('aggregate_root_id', $index) => $this->aggregateRootIdEncoder->encodeId($message->aggregateRootId()),
+                $eventIdIndex => $this->eventIdEncoder->encodeId($payload['headers'][Header::EVENT_ID]),
+                $aggregateRootIdIndex => $this->aggregateRootIdEncoder->encodeId($message->aggregateRootId()),
                 $this->indexParameter('version', $index) => $payload['headers'][Header::AGGREGATE_ROOT_VERSION] ?? 0,
                 $this->indexParameter('payload', $index) => json_encode($payload, $this->jsonEncodeOptions),
             ];
@@ -100,8 +103,16 @@ class DoctrineMessageRepository implements MessageRepository
             implode("),\n(", $insertValues),
         );
 
+        $types = [];
+        if ($this->eventIdEncoder instanceof BinaryUuidIdEncoder) {
+            $types[$eventIdIndex] = ParameterType::BINARY;
+        }
+        if ($this->aggregateRootIdEncoder instanceof BinaryUuidIdEncoder) {
+            $types[$aggregateRootIdIndex] = ParameterType::BINARY;
+        }
+
         try {
-            $this->connection->executeStatement($insertQuery, $insertParameters);
+            $this->connection->executeStatement($insertQuery, $insertParameters, $types);
         } catch (Throwable $exception) {
             throw UnableToPersistMessages::dueTo('', $exception);
         }
@@ -121,7 +132,7 @@ class DoctrineMessageRepository implements MessageRepository
     {
         $builder = $this->createQueryBuilder();
         $builder->where(sprintf('%s = :aggregate_root_id', $this->tableSchema->aggregateRootIdColumn()));
-        $builder->setParameter('aggregate_root_id', $this->aggregateRootIdEncoder->encodeId($id));
+        $builder->setParameter('aggregate_root_id', $this->aggregateRootIdEncoder->encodeId($id), $this->aggregateRootIdEncoder instanceof BinaryUuidIdEncoder ? ParameterType::BINARY : ParameterType::STRING);
 
         try {
             /** @var ResultStatement $resultStatement */
@@ -141,7 +152,7 @@ class DoctrineMessageRepository implements MessageRepository
         $builder = $this->createQueryBuilder();
         $builder->where(sprintf('%s = :aggregate_root_id', $this->tableSchema->aggregateRootIdColumn()));
         $builder->andWhere(sprintf('%s > :version', $this->tableSchema->versionColumn()));
-        $builder->setParameter('aggregate_root_id', $this->aggregateRootIdEncoder->encodeId($id));
+        $builder->setParameter('aggregate_root_id', $this->aggregateRootIdEncoder->encodeId($id), $this->aggregateRootIdEncoder instanceof BinaryUuidIdEncoder ? ParameterType::BINARY : ParameterType::STRING);
         $builder->setParameter('version', $aggregateRootVersion);
 
         try {
