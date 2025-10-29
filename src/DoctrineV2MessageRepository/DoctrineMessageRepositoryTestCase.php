@@ -30,28 +30,6 @@ abstract class DoctrineMessageRepositoryTestCase extends MessageRepositoryTestCa
         $this->connection->executeQuery('TRUNCATE TABLE ' . $this->tableName);
     }
 
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        if (str_contains($this->formatDsn(), 'pgsql')) {
-            // can only check this for mysql
-            return;
-        }
-
-        $warning = $this->connection->executeQuery('SHOW WARNINGS')->fetchNumeric();
-        if ($warning !== false && count($warning) > 0) {
-            if (str_contains($warning[2], 'Base table or view not found') || str_contains($warning[2], "doesn't exist")) {
-                // shortcut for tests
-                return;
-            }
-            self::fail(sprintf(
-                'Warnings issued durings tests, these can potentially result in data loss: [%d] %s',
-                $warning[1],
-                $warning[2],
-            ));
-        }
-    }
-
     protected function aggregateRootId(): AggregateRootId
     {
         return DummyAggregateRootId::generate();

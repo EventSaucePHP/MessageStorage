@@ -18,7 +18,6 @@ class DefaultDoctrineMessageRepositoryTest extends DoctrineMessageRepositoryTest
             serializer: new ConstructingMessageSerializer(),
             tableSchema: new DefaultTableSchema(),
             aggregateRootIdEncoder: new BinaryUuidIdEncoder(),
-            eventIdEncoder: new BinaryUuidIdEncoder(),
         );
     }
 }
