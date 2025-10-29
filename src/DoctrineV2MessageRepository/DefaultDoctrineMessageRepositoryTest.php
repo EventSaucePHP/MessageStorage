@@ -6,6 +6,7 @@ use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\MessageRepository\DoctrineV2MessageRepository\DoctrineMessageRepositoryTestCase;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
+use EventSauce\UuidEncoding\BinaryUuidEncoder;
 
 /**
  * @group doctrine2
