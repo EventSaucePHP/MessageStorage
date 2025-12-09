@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0 - 2025-12-09
+
+### Improvement
+
+- Doctrine now passes UUIDs using binary type hinting to prevent errors in MySQL (@wjzijderveld)
+
 ## 1.3.0 - 2025-05-04
 
 ### Fixes
