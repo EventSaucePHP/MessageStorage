@@ -33,14 +33,14 @@ use function sprintf;
  */
 class IlluminateUuidV4MessageRepository implements MessageRepository
 {
-    private TableSchema $tableSchema;
-    private UuidEncoder $uuidEncoder;
+    protected TableSchema $tableSchema;
+    protected UuidEncoder $uuidEncoder;
 
     public function __construct(
-        private ConnectionInterface $connection,
-        private string $tableName,
-        private MessageSerializer $serializer,
-        private int $jsonEncodeOptions = 0,
+        protected ConnectionInterface $connection,
+        protected string $tableName,
+        protected MessageSerializer $serializer,
+        protected int $jsonEncodeOptions = 0,
         ?TableSchema $tableSchema = null,
         ?UuidEncoder $uuidEncoder = null,
     ) {
@@ -117,7 +117,7 @@ class IlluminateUuidV4MessageRepository implements MessageRepository
      * @param Collection<int, mixed> $result
      * @psalm-return Generator<int, Message>
      */
-    private function yieldMessagesForResult(Collection $result): Generator
+    protected function yieldMessagesForResult(Collection $result): Generator
     {
         foreach ($result as $row) {
             yield $message = $this->serializer->unserializePayload(json_decode($row->payload, true));
