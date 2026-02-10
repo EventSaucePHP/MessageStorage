@@ -3,6 +3,7 @@
 namespace EventSauce\MessageOutbox\IlluminateOutbox;
 
 use EventSauce\EventSourcing\AggregateRootId;
+use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\PaginationCursor;
@@ -10,6 +11,7 @@ use EventSauce\EventSourcing\UnableToPersistMessages;
 use EventSauce\MessageOutbox\OutboxRepository;
 use Generator;
 use Illuminate\Database\ConnectionInterface;
+use Ramsey\Uuid\Uuid;
 use Throwable;
 
 class IlluminateTransactionalMessageRepository implements MessageRepository
@@ -24,6 +26,12 @@ class IlluminateTransactionalMessageRepository implements MessageRepository
     public function persist(Message ...$messages): void
     {
         try {
+            $messages = array_map(static function (Message $message) {
+                return $message->header(Header::EVENT_ID) === null
+                    ? $message->withHeader(Header::EVENT_ID, Uuid::uuid4()->toString())
+                    : $message;
+            }, $messages);
+
             $this->connection->beginTransaction();
 
             try {
