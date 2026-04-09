@@ -110,6 +110,34 @@ abstract class TransactionalMessageRepositoryTestCase extends TestCase
     /**
      * @test
      */
+    public function messages_are_persisted_with_consistent_ids(): void
+    {
+        $messageRepository = $this->messageRepository();
+        $outboxRepository = $this->outboxRepository();
+        $transactionalRepository = $this->transactionalRepository();
+        $message1 = $this->createMessageWithoutId('one', 1);
+        $message2 = $this->createMessageWithoutId('two', 2);
+        $message3 = $this->createMessageWithoutId('three', 3);
+        $message4 = $this->createMessageWithoutId('four', 4);
+
+        $transactionalRepository->persist($message1, $message2, $message3, $message4);
+
+        $messageIds = array_map(
+            static fn (Message $message) => $message->header(Header::EVENT_ID),
+            iterator_to_array($messageRepository->retrieveAll($this->aggregateRootId)),
+        );
+
+        $messageIdsInOutbox = array_map(
+            static fn (Message $message) => $message->header(Header::EVENT_ID),
+            iterator_to_array($outboxRepository->retrieveBatch(10)),
+        );
+
+        self::assertSame($messageIds, $messageIdsInOutbox);
+    }
+
+    /**
+     * @test
+     */
     public function persisted_messages_can_be_retrieved(): void
     {
         $transactionalRepository = $this->transactionalRepository();
@@ -134,6 +162,15 @@ abstract class TransactionalMessageRepositoryTestCase extends TestCase
             ->withHeader(header::EVENT_ID, $this->eventIds[$this->idCounter]);
 
         $this->idCounter++;
+
+        return (new DefaultHeadersDecorator())->decorate($message);
+    }
+
+    protected function createMessageWithoutId(string $value, int $version): Message
+    {
+        $message = (new Message(new DummyEvent($value)))
+            ->withHeader(Header::AGGREGATE_ROOT_ID, $this->aggregateRootId)
+            ->withHeader(Header::AGGREGATE_ROOT_VERSION, $version);
 
         return (new DefaultHeadersDecorator())->decorate($message);
     }
