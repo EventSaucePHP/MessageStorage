@@ -74,6 +74,7 @@ class DoctrineMessageRepository implements MessageRepository
 
         $insertValues = [];
         $insertParameters = [];
+        $types = [];
 
         foreach ($messages as $index => $message) {
             $payload = $this->serializer->serializeMessage($message);
@@ -92,6 +93,13 @@ class DoctrineMessageRepository implements MessageRepository
                 $messageParameters[$this->indexParameter($column, $index)] = $payload['headers'][$header];
             }
 
+            if ($this->binaryEventId) {
+                $types[$eventIdIndex] = ParameterType::BINARY;
+            }
+            if ($this->binaryAggregateRootId) {
+                $types[$aggregateRootIdIndex] = ParameterType::BINARY;
+            }
+
             // Creates a values line like: (:event_id_1, :aggregate_root_id_1, ...)
             $insertValues[] = implode(', ', $this->formatNamedParameters(array_keys($messageParameters)));
 
@@ -105,14 +113,6 @@ class DoctrineMessageRepository implements MessageRepository
             implode(', ', $insertColumns),
             implode("),\n(", $insertValues),
         );
-
-        $types = [];
-        if ($this->binaryEventId) {
-            $types[$eventIdIndex] = ParameterType::BINARY;
-        }
-        if ($this->binaryAggregateRootId) {
-            $types[$aggregateRootIdIndex] = ParameterType::BINARY;
-        }
 
         try {
             $this->connection->executeStatement($insertQuery, $insertParameters, $types);

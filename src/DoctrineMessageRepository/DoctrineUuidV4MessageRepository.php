@@ -70,6 +70,8 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
 
         $insertValues = [];
         $insertParameters = [];
+        $types = [];
+        $isBinaryId = $this->uuidEncoder instanceof BinaryUuidEncoder;
 
         foreach ($messages as $index => $message) {
             $payload = $this->serializer->serializeMessage($message);
@@ -88,6 +90,11 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
                 $messageParameters[$this->indexParameter($column, $index)] = $payload['headers'][$header];
             }
 
+            if ($isBinaryId) {
+                $types[$eventIdIndex] = ParameterType::BINARY;
+                $types[$aggregateRootIdIndex] = ParameterType::BINARY;
+            }
+
             // Creates a values line like: (:event_id_1, :aggregate_root_id_1, ...)
             $insertValues[] = implode(', ', $this->formatNamedParameters(array_keys($messageParameters)));
 
@@ -101,14 +108,6 @@ class DoctrineUuidV4MessageRepository implements MessageRepository
             implode(', ', $insertColumns),
             implode("),\n(", $insertValues),
         );
-
-        $types = [];
-        if ($this->uuidEncoder instanceof BinaryUuidEncoder) {
-            $types = [
-                $eventIdIndex => ParameterType::BINARY,
-                $aggregateRootIdIndex => ParameterType::BINARY,
-            ];
-        }
 
         try {
             $this->connection->executeStatement($insertQuery, $insertParameters, $types);

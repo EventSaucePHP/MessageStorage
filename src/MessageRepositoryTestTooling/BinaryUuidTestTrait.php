@@ -16,15 +16,16 @@ trait BinaryUuidTestTrait
         }
 
         $repository = $this->messageRepository();
-        $message = $this->createMessage('payload');
+        $message1 = $this->createMessage('payload1');
+        $message2 = $this->createMessage('payload2');
 
-        $repository->persist($message);
+        $repository->persist($message1, $message2);
         $this->assertWarnings('persist()');
 
-        $repository->retrieveAll($message->aggregateRootId());
+        $repository->retrieveAll($message1->aggregateRootId());
         $this->assertWarnings('retrieveAll()');
 
-        $repository->retrieveAllAfterVersion($message->aggregateRootId(), 1);
+        $repository->retrieveAllAfterVersion($message1->aggregateRootId(), 1);
         $this->assertWarnings('retrieveAllAfterVersion()');
     }
 
